@@ -10,7 +10,9 @@ const App = () => {
 
     return (
         <CVContext.Provider value={[CvData, setCvData]}>
-            <div className="p-10">
+            <div className="p-10 w-max">
+                <ContactEdit />
+                <ContactEdit />
                 <ContactEdit />
             </div>
         </CVContext.Provider>
