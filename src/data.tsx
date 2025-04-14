@@ -4,7 +4,8 @@ import { JSX } from 'react';
 export interface ContactInfo {
     name: string;
     url: string;
-    logo?: (props: any) => JSX.Element;
+    prefix: string;
+    logo: (props: any) => JSX.Element;
 }
 
 interface Course {
@@ -13,11 +14,11 @@ interface Course {
     end: Date;
     yearOnly?: boolean;
 }
-
 export interface EducationInfo {
     name: string;
     what: Course[];
 }
+
 export type CvInfo = {
     name: string;
     about: string;
