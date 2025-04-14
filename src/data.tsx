@@ -1,6 +1,23 @@
-import { ContactInfo } from './components/contact';
-import { EducationInfo } from './components/education';
+import React from 'react';
+import { JSX } from 'react';
 
+export interface ContactInfo {
+    name: string;
+    url: string;
+    logo?: (props: any) => JSX.Element;
+}
+
+interface Course {
+    name: string;
+    start: Date;
+    end: Date;
+    yearOnly?: boolean;
+}
+
+export interface EducationInfo {
+    name: string;
+    what: Course[];
+}
 export type CvInfo = {
     name: string;
     about: string;
@@ -9,19 +26,22 @@ export type CvInfo = {
     eduExtra: EducationInfo[];
 };
 
-export const EmptyCv = () => {
+export const EmptyCv = (): CvInfo => {
     return {
         name: '',
         about: '',
         contact: [],
         eduMain: [],
         eduExtra: [],
-    } as CvInfo;
+    };
 };
 
-type CvContextType = [CvInfo, React.Dispatch<React.SetStateAction<CvInfo>>];
+export type CvContextType = [
+    CvInfo,
+    React.Dispatch<React.SetStateAction<CvInfo>>,
+];
 
-// if i cared enough this would have a reducer
+// in an alternate reality where i care this is a reducer
 export const CVContext = React.createContext<CvContextType>([
     EmptyCv(),
     () => {
