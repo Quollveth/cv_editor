@@ -1,5 +1,6 @@
 import React from 'react';
 import { JSX } from 'react';
+import * as Logo from './components/logos/social';
 
 export interface ContactInfo {
     name: string;
@@ -7,6 +8,14 @@ export interface ContactInfo {
     prefix: string;
     logo: (props: any) => JSX.Element;
 }
+export const EmptyContact = () => {
+    return {
+        name: '',
+        url: '',
+        prefix: '',
+        logo: Logo.Email,
+    };
+};
 
 interface Course {
     name: string;

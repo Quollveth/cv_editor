@@ -1,35 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ContactInfo } from '../data';
 import * as Logo from './logos/social';
 import Select, { OptionProps, SingleValueProps } from 'react-select';
 
 const ContactOptions: ContactInfo[] = [
     {
-        name: 'GitHub',
+        name: '',
         url: 'https://github.com/',
         prefix: 'github.com/',
         logo: Logo.GitHub,
     },
     {
-        name: 'Bluesky',
+        name: '',
         url: 'https://bsky.app/profile/',
         prefix: 'bsky.app/profile/',
         logo: Logo.Bluesky,
     },
     {
-        name: 'LinkedIn',
+        name: '',
         url: 'https://www.linkedin.com/in/',
         prefix: 'linkedin.com/in/',
         logo: Logo.LinkedIn,
     },
     {
-        name: 'WhatsApp',
+        name: '',
         url: 'https://api.whatsapp.com/send?phone=',
         prefix: '+',
         logo: Logo.WhatsApp,
     },
     {
-        name: 'Email',
+        name: '',
         url: 'mailto:',
         prefix: '',
         logo: Logo.Email,
@@ -47,15 +47,19 @@ const LogoOption = (props: OptionProps<ContactInfo>) => {
     );
 };
 
-export default function ContactEdit() {
-    const [selected, setSelected] = useState<ContactInfo>(ContactOptions[0]);
+export default function ContactEdit(props: {
+    initial: ContactInfo;
+    onChange: (newContact: ContactInfo) => void;
+}) {
+    const [selected, setSelected] = useState<ContactInfo>(props.initial);
 
     const handleChange = (option: any) => {
-        setSelected(option);
+        setSelected({ ...option, name: selected.name });
     };
 
-    // prettier-ignore
-    const noStyle=()=>{return {};};
+    useEffect(() => {
+        props.onChange(selected);
+    }, [selected]);
 
     return (
         <div className="flex flex-1 items-end gap-2 h-10 min-w-min border border-gray-300 rounded">
@@ -66,18 +70,15 @@ export default function ContactEdit() {
                     options={ContactOptions}
                     styles={{
                         control: () => {
-                            return {
-                                display: 'flex',
-                                flexDirection: 'row-reverse',
-                            };
+                            //prettier-ignore
+                            return { display: 'flex', flexDirection: 'row-reverse', };
                         },
+                        //prettier-ignore
                         dropdownIndicator: (base) => {
-                            return {
-                                ...base,
-                                padding: '0',
-                            };
+                            return { ...base, padding: '0', };
                         },
-                        indicatorSeparator: noStyle,
+                        //prettier-ignore
+                        indicatorSeparator:()=>{return {};},
                     }}
                     components={{
                         Option: LogoOption,
@@ -90,7 +91,13 @@ export default function ContactEdit() {
                 <span className="text-gray-400 min-w-fit">
                     {selected.prefix}
                 </span>
-                <input type="text" />
+                <input
+                    type="text"
+                    value={selected.name}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setSelected({ ...selected, name: e.target.value })
+                    }
+                />
             </span>
         </div>
     );

@@ -3,19 +3,27 @@ import { createRoot } from 'react-dom/client';
 
 import '@/assets/main.css';
 import { CVContext, EmptyCv } from './data';
-import ContactEdit from './components/contact';
+import ContactList from './components/contactList';
 
 const App = () => {
-    const [CvData, setCvData] = useState(EmptyCv());
+    const [CvData, setCvData] = useState(EmptyCv);
 
     return (
-        <CVContext.Provider value={[CvData, setCvData]}>
-            <div className="p-10 w-max">
-                <ContactEdit />
-                <ContactEdit />
-                <ContactEdit />
-            </div>
-        </CVContext.Provider>
+        <>
+            <button
+                className="m-4 p-2 cursor-pointer border-2 border-amber-700"
+                onClick={() => {
+                    console.log(CvData);
+                }}
+            >
+                Click
+            </button>
+            <CVContext.Provider value={[CvData, setCvData]}>
+                <div className="w-max">
+                    <ContactList />
+                </div>
+            </CVContext.Provider>
+        </>
     );
 };
 
