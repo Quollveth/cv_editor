@@ -17,12 +17,20 @@ export const EmptyContact = () => {
     };
 };
 
-interface Course {
+export interface Course {
     name: string;
     start: Date;
     end: Date;
     yearOnly?: boolean;
 }
+export const emptyCourse = (): Course => {
+    return {
+        name: '',
+        start: new Date(),
+        end: new Date(),
+    };
+};
+
 export interface EducationInfo {
     name: string;
     what: Course[];

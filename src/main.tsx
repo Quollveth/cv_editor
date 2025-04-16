@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import '@/assets/main.css';
 import { CVContext, EmptyCv } from './data';
-import ContactList from './components/contactList';
+import Education from './components/education';
 
 const App = () => {
     const [CvData, setCvData] = useState(EmptyCv);
@@ -20,7 +20,7 @@ const App = () => {
             </button>
             <CVContext.Provider value={[CvData, setCvData]}>
                 <div className="w-max">
-                    <ContactList />
+                    <Education />
                 </div>
             </CVContext.Provider>
         </>
