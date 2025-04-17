@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Course, emptyCourse } from '../data';
+import { Course, EmptyCourse } from '../data';
 
 const CourseEdit = (props: { onChange: (newCourse: Course) => void }) => {
-    const [course, setCourse] = useState<Course>(emptyCourse());
+    const [course, setCourse] = useState<Course>(EmptyCourse());
 
     useEffect(() => {
         props.onChange(course);

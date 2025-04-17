@@ -15,3 +15,45 @@ export const GetAge = (birthdayStr: string): number => {
 
     return age;
 };
+
+type GenericWithId<T extends Object> = T & { id: string };
+type ArrayReducerType<T extends Object> =
+    | { type: 'Add' }
+    | { type: 'Remove'; idx: number }
+    | { type: 'Edit'; idx: number; data: Partial<T> }
+    | { type: 'Sort'; data: GenericWithId<T>[] };
+
+const GenericArrayReducer = <T extends Object>(
+    empty: () => T,
+    state: GenericWithId<T>[],
+    action: ArrayReducerType<T>
+): GenericWithId<T>[] => {
+    switch (action.type) {
+        case 'Add':
+            return [...state, { ...empty(), id: crypto.randomUUID() }];
+        case 'Remove':
+            return state.filter((_, i) => i !== action.idx);
+        case 'Edit':
+            return state.map((e, i) =>
+                i === action.idx ? { ...e, ...action.data } : e
+            );
+        case 'Sort':
+            return action.data;
+        default:
+            throw new Error(
+                `Congrats you broke the reducer: ${(action as any).type}`
+            );
+    }
+};
+
+export function CreateArrayReducer<T extends Object>(
+    emptyFactory: () => T
+): (
+    state: GenericWithId<T>[],
+    action: ArrayReducerType<T>
+) => GenericWithId<T>[] {
+    return (state: GenericWithId<T>[], action: ArrayReducerType<T>) => {
+        return GenericArrayReducer(emptyFactory, state, action);
+    };
+}
+

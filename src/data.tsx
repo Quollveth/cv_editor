@@ -23,7 +23,7 @@ export interface Course {
     end: Date;
     yearOnly?: boolean;
 }
-export const emptyCourse = (): Course => {
+export const EmptyCourse = (): Course => {
     return {
         name: '',
         start: new Date(),
