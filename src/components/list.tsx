@@ -1,4 +1,4 @@
-import { ReactNode, useReducer } from 'react';
+import { JSX, useEffect, useReducer } from 'react';
 import { AddSymbol, RemoveSymbol } from './svg';
 import { ReactSortable } from 'react-sortablejs';
 
@@ -30,20 +30,30 @@ const ListReducer = (
     }
 };
 
-const DynamicList = ({ children }: { children: ReactNode }) => {
+interface DynamicListProps {
+    render: (...args: any) => JSX.Element;
+    title: string;
+    onChange: (data: any, idx: number) => void;
+    emptyFactory: () => any;
+}
+
+const DynamicList = (props: DynamicListProps) => {
     const [items, dispatch] = useReducer(ListReducer, []);
 
     return (
-        <div className="p-4 max-w-md mx-auto">
-            <button
-                onClick={() => dispatch({ type: 'Add' })}
-                className="mb-4 flex items-center gap-2 px-4 py-2 border-1 border-gray-600 rounded transition"
-            >
-                <div className="hover:text-blue-700">
-                    <AddSymbol />
-                </div>
-                <span>Add Item</span>
-            </button>
+        <div className="p-4 max-w-md mx-auto border-1 border-gray-600 rounded transition">
+            <div className="flex gap-2 items-center justify-between mb-4">
+                <span>{props.title}</span>
+                <button
+                    className="flex items-center gap-4 border-1 border-gray-400 p-1 px-2 rounded"
+                    onClick={() => dispatch({ type: 'Add' })}
+                >
+                    <span>Add Item</span>
+                    <div className="hover:text-blue-700">
+                        <AddSymbol />
+                    </div>
+                </button>
+            </div>
 
             <ReactSortable
                 list={items}
@@ -54,9 +64,15 @@ const DynamicList = ({ children }: { children: ReactNode }) => {
                 {items.map((it, idx) => (
                     <div
                         key={it.id}
-                        className="mb-2 flex items-center justify-between p-3 bg-white rounded border-1 border-gray-600 transition"
+                        className="mb-2 flex items-center justify-between p-3 bg-white rounded border-1 border-gray-400 transition"
                     >
-                        <div className="flex-1">{children}</div>
+                        {/*prettier-ignore*/}
+                        <div className="flex-1">
+							{props.render({
+								initial:props.emptyFactory(),
+								onChange:(data:any)=>{props.onChange(data,idx)},
+							})}
+						</div>
                         <button
                             onClick={() =>
                                 dispatch({ type: 'Remove', idx: idx })

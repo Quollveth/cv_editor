@@ -1,16 +1,18 @@
-import { StrictMode, useState } from 'react';
+import { StrictMode, useContext, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import '@/assets/main.css';
-import { CVContext, EmptyCv } from './data';
+import { ContactInfo, CVContext, EmptyContact, EmptyCv } from './data';
 import DynamicList from './components/list';
+import ContactEdit, { ContactEditProps } from './components/contact';
 
-const Text = (props: { initial: string }) => {
-    return <input defaultValue={props.initial} />;
-};
+const Editor = () => {
+    const [CvData, setCvData] = useContext(CVContext);
 
-const App = () => {
-    const [CvData, setCvData] = useState(EmptyCv);
+    useEffect(() => {
+        console.log('CvData Changed');
+        console.log(CvData);
+    }, [CvData]);
 
     return (
         <>
@@ -22,19 +24,37 @@ const App = () => {
             >
                 Click
             </button>
-            <CVContext.Provider value={[CvData, setCvData]}>
-                <div className="w-max">
-                    <DynamicList>
-                        <Text initial="" />
-                    </DynamicList>
-                </div>
-            </CVContext.Provider>
+            <div className="w-max p-4">
+                <DynamicList
+                    title="Contact Info"
+                    emptyFactory={EmptyContact}
+                    onChange={(data: ContactInfo, idx) => {
+                        const newData = { ...CvData };
+                        newData.contact[idx] = data;
+                        setCvData(newData);
+                    }}
+                    render={(config: ContactEditProps) => (
+                        <ContactEdit
+                            initial={config.initial}
+                            onChange={config.onChange}
+                        />
+                    )}
+                />
+            </div>
         </>
     );
 };
 
-createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-        <App />
-    </StrictMode>
-);
+const App = () => {
+    const [CvData, setCvData] = useState(EmptyCv());
+
+    return (
+        <StrictMode>
+            <CVContext.Provider value={[CvData, setCvData]}>
+                <Editor />
+            </CVContext.Provider>
+        </StrictMode>
+    );
+};
+
+createRoot(document.getElementById('root')!).render(<App />);

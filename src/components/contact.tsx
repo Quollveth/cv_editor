@@ -47,10 +47,12 @@ const LogoOption = (props: OptionProps<ContactInfo>) => {
     );
 };
 
-export default function ContactEdit(props: {
+export interface ContactEditProps {
     initial: ContactInfo;
     onChange: (newContact: ContactInfo) => void;
-}) {
+}
+
+export default function ContactEdit(props: ContactEditProps) {
     const [selected, setSelected] = useState<ContactInfo>(props.initial);
 
     const handleChange = (option: any) => {
