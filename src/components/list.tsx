@@ -3,7 +3,7 @@ import { AddSymbol, RemoveSymbol } from './svg';
 import { ReactSortable } from 'react-sortablejs';
 
 // ReactSortable type definitions only allows objects with an 'id' field
-type ListItem<T extends Object> = T & {
+export type ListItem<T extends Object> = T & {
     id: string;
 };
 
@@ -54,13 +54,17 @@ interface DynamicListProps<T> {
     title: string;
     onChange: (data: T[]) => void;
     emptyFactory: () => T;
+    starting?: T[];
 }
 
 const DynamicList = <T extends Object>(props: DynamicListProps<T>) => {
+    const initial = (props.starting ?? []) as ListItem<T>[];
+
     const [items, dispatch] = useReducer(
-        CreateListReducer(props.emptyFactory),
-        []
+        CreateListReducer<T>(props.emptyFactory),
+        initial
     );
+
     useEffect(() => {
         props.onChange(items);
     }, [items]);

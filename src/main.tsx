@@ -3,8 +3,8 @@ import { createRoot } from 'react-dom/client';
 
 import '@/assets/main.css';
 import { ContactInfo, CVContext, EmptyContact, EmptyCv } from './data';
-import DynamicList from './components/list';
 import ContactEdit, { ContactEditProps } from './components/contact';
+import DynamicList from './components/list';
 
 const Editor = () => {
     const [_, setCvData] = useContext(CVContext);
