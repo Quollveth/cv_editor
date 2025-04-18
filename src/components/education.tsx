@@ -85,8 +85,12 @@ const CourseEdit = (props: { onChange: (newCourse: Course) => void }) => {
 
 export default function Education() {
     return (
-        <div>
-            <input type="text" placeholder="Institution" />
+        <div className="p-2 border-1 border-gray-300">
+            <input
+                className="border-1 border-gray-300 w-1/2"
+                type="text"
+                placeholder="Institution"
+            />
             <CourseEdit onChange={() => {}} />
         </div>
     );

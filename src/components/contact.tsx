@@ -87,11 +87,12 @@ export default function ContactEdit(props: {
                     isSearchable={false}
                 />
             </div>
-            <span className="flex h-10 items-center  px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+            <span className="flex flex-1 h-10 items-center  px-2 py-1 text-sm ">
                 <span className="text-gray-400 min-w-fit">
                     {selected.prefix}
                 </span>
                 <input
+                    className="w-full"
                     type="text"
                     value={selected.name}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

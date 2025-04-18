@@ -3,8 +3,11 @@ import { createRoot } from 'react-dom/client';
 
 import '@/assets/main.css';
 import { CVContext, EmptyCv } from './data';
-import Education from './components/education';
-import ContactList from './components/contactList';
+import DynamicList from './components/list';
+
+const Text = (props: { initial: string }) => {
+    return <input defaultValue={props.initial} />;
+};
 
 const App = () => {
     const [CvData, setCvData] = useState(EmptyCv);
@@ -21,8 +24,9 @@ const App = () => {
             </button>
             <CVContext.Provider value={[CvData, setCvData]}>
                 <div className="w-max">
-                    <ContactList />
-                    <Education />
+                    <DynamicList>
+                        <Text initial="" />
+                    </DynamicList>
                 </div>
             </CVContext.Provider>
         </>
