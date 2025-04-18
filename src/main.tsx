@@ -2,9 +2,17 @@ import { StrictMode, useCallback, useContext, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import '@/assets/main.css';
-import { ContactInfo, CVContext, EmptyContact, EmptyCv } from './data';
-import ContactEdit, { ContactEditProps } from './components/contact';
-import DynamicList from './components/list';
+import {
+    ContactInfo,
+    CVContext,
+    EducationInfo,
+    EmptyContact,
+    EmptyCv,
+    EmptyEducation,
+} from './data';
+import ContactEdit from './components/contact';
+import DynamicList, { ListRenderProps } from './components/list';
+import EducationEdit from './components/education';
 
 const Editor = () => {
     const [_, setCvData] = useContext(CVContext);
@@ -18,15 +26,35 @@ const Editor = () => {
         [setCvData]
     );
 
+    const MainEducationChanger = useCallback(
+        (data: EducationInfo[]) => {
+            setCvData((prev) => {
+                return { ...prev, eduMain: data };
+            });
+        },
+        [setCvData]
+    );
+
     return (
         <>
-            <div className="w-max p-4">
+            <div className="m-4">
                 <DynamicList<ContactInfo>
-                    title="Contact Info"
+                    title={() => <p>Contact Info</p>}
                     emptyFactory={EmptyContact}
                     onChange={ContactChanger}
-                    render={(config: ContactEditProps) => (
+                    render={(config: ListRenderProps<ContactInfo>) => (
                         <ContactEdit
+                            initial={config.initial}
+                            onChange={config.onChange}
+                        />
+                    )}
+                />
+                <DynamicList<EducationInfo>
+                    title={() => <p>Main Education Info</p>}
+                    emptyFactory={EmptyEducation}
+                    onChange={MainEducationChanger}
+                    render={(config: ListRenderProps<EducationInfo>) => (
+                        <EducationEdit
                             initial={config.initial}
                             onChange={config.onChange}
                         />

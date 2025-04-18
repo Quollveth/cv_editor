@@ -28,3 +28,22 @@ export const RemoveSymbol = () => (
         <line x1="20" y1="32" x2="44" y2="32" />
     </svg>
 );
+
+export const DropdownSymbol = () => (
+    <svg
+        className="w-12 h-12"
+        width="1em"
+        height="1em"
+        viewBox="0 0 64 64"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        stroke="currentColor"
+    >
+        <circle cx="32" cy="32" r="24" />
+        <polyline
+            points="24,28 32,36 40,28"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </svg>
+);

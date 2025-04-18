@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Course, EmptyCourse } from '../data';
+import { Course, EducationInfo, EmptyCourse, EmptyEducation } from '../data';
+import DynamicList, { ListRenderProps } from './list';
 
-const CourseEdit = (props: { onChange: (newCourse: Course) => void }) => {
+const CourseEdit = (props: ListRenderProps<Course>) => {
     const [course, setCourse] = useState<Course>(EmptyCourse());
 
     useEffect(() => {
@@ -35,7 +36,7 @@ const CourseEdit = (props: { onChange: (newCourse: Course) => void }) => {
                 name="name"
                 value={course.name}
                 onChange={handleChange}
-                className="input input-sm border border-gray-300 rounded px-2 py-1"
+                className="input input-sm border border-gray-300 rounded px-2 py-1 flex-1"
             />
 
             <div className="flex items-center space-x-1">
@@ -83,15 +84,49 @@ const CourseEdit = (props: { onChange: (newCourse: Course) => void }) => {
     );
 };
 
-export default function Education() {
+export default function EducationEdit(props: ListRenderProps<EducationInfo>) {
+    const [data, setData] = useState(props.initial ?? EmptyEducation());
+    const editData = (newData: Partial<EducationInfo>) => {
+        setData({
+            ...data,
+            ...newData,
+        });
+    };
+
+    const CourseChanger = (data: Course[]) => {
+        editData({
+            what: data,
+        });
+    };
+
+    useEffect(() => {
+        props.onChange(data);
+    }, [data]);
+
     return (
         <div className="p-2 border-1 border-gray-300">
-            <input
-                className="border-1 border-gray-300 w-1/2"
-                type="text"
-                placeholder="Institution"
+            <DynamicList<Course>
+                title={() => (
+                    <input
+                        className="border-1 border-gray-300 w-full"
+                        type="text"
+                        placeholder="Institution"
+                        onInput={(e) =>
+                            editData({
+                                name: (e.target as HTMLInputElement).value,
+                            })
+                        }
+                    />
+                )}
+                emptyFactory={EmptyCourse}
+                onChange={CourseChanger}
+                render={(config: ListRenderProps<Course>) => (
+                    <CourseEdit
+                        initial={config.initial}
+                        onChange={config.onChange}
+                    />
+                )}
             />
-            <CourseEdit onChange={() => {}} />
         </div>
     );
 }

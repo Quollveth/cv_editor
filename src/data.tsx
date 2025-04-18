@@ -35,6 +35,12 @@ export interface EducationInfo {
     name: string;
     what: Course[];
 }
+export const EmptyEducation = (): EducationInfo => {
+    return {
+        name: '',
+        what: [],
+    };
+};
 
 export type CvInfo = {
     name: string;
