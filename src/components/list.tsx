@@ -3,42 +3,67 @@ import { AddSymbol, RemoveSymbol } from './svg';
 import { ReactSortable } from 'react-sortablejs';
 
 // ReactSortable type definitions only allows objects with an 'id' field
-type ListItem = {
+type ListItem<T extends Object> = T & {
     id: string;
 };
 
-type ListReducerAction =
+type ListReducerAction<T extends Object> =
     | { type: 'Add' }
     | { type: 'Remove'; idx: number }
-    | { type: 'Sort'; data: ListItem[] };
+    | { type: 'Sort'; data: ListItem<T>[] }
+    | { type: 'Edit'; idx: number; data: ListItem<T> };
 
-const ListReducer = (
-    state: ListItem[],
-    action: ListReducerAction
-): ListItem[] => {
+function ListReducer<T extends Object>(
+    factory: () => T,
+    state: ListItem<T>[],
+    action: ListReducerAction<T>
+): ListItem<T>[] {
     switch (action.type) {
         case 'Add':
-            return [...state, { id: crypto.randomUUID() }];
+            return [...state, { ...factory(), id: crypto.randomUUID() }];
         case 'Remove':
             return state.filter((_, i) => i !== action.idx);
         case 'Sort':
             return action.data;
-        default:
-            throw new Error(
-                `Congrats you broke the reducer: ${(action as any).type}`
+        case 'Edit':
+            return state.map((it, idx) =>
+                idx === action.idx ? action.data : it
             );
+        default:
+            const exhaustive: never = action;
+            throw new Error(`Dumbass broke the reducer: ${exhaustive}`);
     }
-};
-
-interface DynamicListProps {
-    render: (...args: any) => JSX.Element;
-    title: string;
-    onChange: (data: any, idx: number) => void;
-    emptyFactory: () => any;
 }
 
-const DynamicList = (props: DynamicListProps) => {
-    const [items, dispatch] = useReducer(ListReducer, []);
+//prettier-ignore
+type ListReducerType<T extends Object> = (state:ListItem<T>[],action:ListReducerAction<T>) => ListItem<T>[];
+//prettier-ignore
+function CreateListReducer<T extends Object>(factory: ()=>T): ListReducerType<T> {
+    return (state: ListItem<T>[], action: ListReducerAction<T>) => {
+        return ListReducer(factory, state, action);
+    };
+}
+
+interface RenderProps<T> {
+    initial: T;
+    onChange: (data: T) => void;
+}
+
+interface DynamicListProps<T> {
+    render: (props: RenderProps<T>) => JSX.Element;
+    title: string;
+    onChange: (data: T[]) => void;
+    emptyFactory: () => T;
+}
+
+const DynamicList = <T extends Object>(props: DynamicListProps<T>) => {
+    const [items, dispatch] = useReducer(
+        CreateListReducer(props.emptyFactory),
+        []
+    );
+    useEffect(() => {
+        props.onChange(items);
+    }, [items]);
 
     return (
         <div className="p-4 max-w-md mx-auto border-1 border-gray-600 rounded transition">
@@ -57,7 +82,7 @@ const DynamicList = (props: DynamicListProps) => {
 
             <ReactSortable
                 list={items}
-                setList={(newState: ListItem[]) => {
+                setList={(newState: ListItem<T>[]) => {
                     dispatch({ type: 'Sort', data: newState });
                 }}
             >
@@ -66,13 +91,18 @@ const DynamicList = (props: DynamicListProps) => {
                         key={it.id}
                         className="mb-2 flex items-center justify-between p-3 bg-white rounded border-1 border-gray-400 transition"
                     >
-                        {/*prettier-ignore*/}
                         <div className="flex-1">
-							{props.render({
-								initial:props.emptyFactory(),
-								onChange:(data:any)=>{props.onChange(data,idx)},
-							})}
-						</div>
+                            {props.render({
+                                initial: it as T,
+                                onChange: (data: T) => {
+                                    dispatch({
+                                        type: 'Edit',
+                                        idx: idx,
+                                        data: { ...data, id: it.id },
+                                    });
+                                },
+                            })}
+                        </div>
                         <button
                             onClick={() =>
                                 dispatch({ type: 'Remove', idx: idx })

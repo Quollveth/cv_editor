@@ -1,4 +1,4 @@
-import { StrictMode, useContext, useEffect, useState } from 'react';
+import { StrictMode, useCallback, useContext, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import '@/assets/main.css';
@@ -7,32 +7,24 @@ import DynamicList from './components/list';
 import ContactEdit, { ContactEditProps } from './components/contact';
 
 const Editor = () => {
-    const [CvData, setCvData] = useContext(CVContext);
+    const [_, setCvData] = useContext(CVContext);
 
-    useEffect(() => {
-        console.log('CvData Changed');
-        console.log(CvData);
-    }, [CvData]);
+    const ContactChanger = useCallback(
+        (data: ContactInfo[]) => {
+            setCvData((prev) => {
+                return { ...prev, contact: data };
+            });
+        },
+        [setCvData]
+    );
 
     return (
         <>
-            <button
-                className="m-4 p-2 cursor-pointer border-2 border-amber-700"
-                onClick={() => {
-                    console.log(CvData);
-                }}
-            >
-                Click
-            </button>
             <div className="w-max p-4">
-                <DynamicList
+                <DynamicList<ContactInfo>
                     title="Contact Info"
                     emptyFactory={EmptyContact}
-                    onChange={(data: ContactInfo, idx) => {
-                        const newData = { ...CvData };
-                        newData.contact[idx] = data;
-                        setCvData(newData);
-                    }}
+                    onChange={ContactChanger}
                     render={(config: ContactEditProps) => (
                         <ContactEdit
                             initial={config.initial}
@@ -50,6 +42,14 @@ const App = () => {
 
     return (
         <StrictMode>
+            <button
+                className="m-4 p-2 cursor-pointer border-2 border-amber-700"
+                onClick={() => {
+                    console.log(CvData);
+                }}
+            >
+                Click
+            </button>
             <CVContext.Provider value={[CvData, setCvData]}>
                 <Editor />
             </CVContext.Provider>
