@@ -6,30 +6,35 @@ import Select, { OptionProps, SingleValueProps } from 'react-select';
 const ContactOptions: ContactInfo[] = [
     {
         name: '',
+        which: 'github',
         url: 'https://github.com/',
         prefix: 'github.com/',
         logo: Logo.GitHub,
     },
     {
         name: '',
+        which: 'bluesky',
         url: 'https://bsky.app/profile/',
         prefix: 'bsky.app/profile/',
         logo: Logo.Bluesky,
     },
     {
         name: '',
+        which: 'linkedin',
         url: 'https://www.linkedin.com/in/',
         prefix: 'linkedin.com/in/',
         logo: Logo.LinkedIn,
     },
     {
         name: '',
+        which: 'whatsapp',
         url: 'https://api.whatsapp.com/send?phone=',
         prefix: '+',
         logo: Logo.WhatsApp,
     },
     {
         name: '',
+        which: 'email',
         url: 'mailto:',
         prefix: '',
         logo: Logo.Email,

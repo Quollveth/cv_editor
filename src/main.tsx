@@ -57,20 +57,6 @@ const Editor = () => {
     );
 
     return (
-        <DynamicList<Skill>
-            title={() => <p>Skills</p>}
-            emptyFactory={EmptySkill}
-            onChange={SkillChanger}
-            render={(config: ListRenderProps<Skill>) => (
-                <SkillEditor
-                    initial={config.initial}
-                    onChange={config.onChange}
-                />
-            )}
-        />
-    );
-
-    return (
         <>
             <div className="m-4">
                 <DynamicList<ContactInfo>
@@ -79,6 +65,17 @@ const Editor = () => {
                     onChange={ContactChanger}
                     render={(config: ListRenderProps<ContactInfo>) => (
                         <ContactEdit
+                            initial={config.initial}
+                            onChange={config.onChange}
+                        />
+                    )}
+                />
+                <DynamicList<Skill>
+                    title={() => <p>Skills</p>}
+                    emptyFactory={EmptySkill}
+                    onChange={SkillChanger}
+                    render={(config: ListRenderProps<Skill>) => (
+                        <SkillEditor
                             initial={config.initial}
                             onChange={config.onChange}
                         />

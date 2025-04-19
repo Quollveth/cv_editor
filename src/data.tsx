@@ -2,17 +2,27 @@ import React from 'react';
 import { JSX } from 'react';
 import * as Logo from './components/logos/social';
 
+export type Social =
+    | 'bluesky'
+    | 'email'
+    | 'github'
+    | 'instagram'
+    | 'linkedin'
+    | 'whatsapp';
+
 export interface ContactInfo {
     name: string;
     url: string;
     prefix: string;
+    which: Social;
     logo: (props: any) => JSX.Element;
 }
-export const EmptyContact = () => {
+export const EmptyContact = (): ContactInfo => {
     return {
         name: '',
         url: '',
         prefix: '',
+        which: 'email',
         logo: Logo.Email,
     };
 };
@@ -42,7 +52,11 @@ export const EmptyEducation = (): EducationInfo => {
     };
 };
 
-type SkillLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Proficient';
+export type SkillLevel =
+    | 'Beginner'
+    | 'Intermediate'
+    | 'Advanced'
+    | 'Proficient';
 export interface Skill {
     name: string;
     logo?: string;
