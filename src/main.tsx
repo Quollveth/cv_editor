@@ -16,6 +16,7 @@ import ContactEdit from './components/contact';
 import DynamicList, { ListRenderProps } from './components/list';
 import EducationEdit from './components/education';
 import SkillEditor from './components/skill';
+import { LoadCv, SaveCv } from './helpers';
 
 const Editor = () => {
     const [_, setCvData] = useContext(CVContext);
@@ -167,10 +168,19 @@ const App = () => {
             <button
                 className="m-4 p-2 cursor-pointer border-2 border-amber-700"
                 onClick={() => {
-                    console.log(CvData);
+                    SaveCv(CvData);
                 }}
             >
-                Click
+                Save
+            </button>
+            <button
+                className="m-4 p-2 cursor-pointer border-2 border-amber-700"
+                onClick={async () => {
+                    const cv = await LoadCv();
+                    setCvData(cv);
+                }}
+            >
+                Load
             </button>
             <CVContext.Provider value={[CvData, setCvData]}>
                 <Editor />

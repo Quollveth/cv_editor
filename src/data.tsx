@@ -9,7 +9,6 @@ export type Social =
     | 'instagram'
     | 'linkedin'
     | 'whatsapp';
-
 export interface ContactInfo {
     name: string;
     url: string;
@@ -17,41 +16,16 @@ export interface ContactInfo {
     which: Social;
     logo: (props: any) => JSX.Element;
 }
-export const EmptyContact = (): ContactInfo => {
-    return {
-        name: '',
-        url: '',
-        prefix: '',
-        which: 'email',
-        logo: Logo.Email,
-    };
-};
-
 export interface Course {
     name: string;
     start: Date;
     end: Date;
     yearOnly?: boolean;
 }
-export const EmptyCourse = (): Course => {
-    return {
-        name: '',
-        start: new Date(),
-        end: new Date(),
-    };
-};
-
 export interface EducationInfo {
     name: string;
     what: Course[];
 }
-export const EmptyEducation = (): EducationInfo => {
-    return {
-        name: '',
-        what: [],
-    };
-};
-
 export type SkillLevel =
     | 'Beginner'
     | 'Intermediate'
@@ -62,14 +36,6 @@ export interface Skill {
     logo?: string;
     level: SkillLevel;
 }
-
-export const EmptySkill = (): Skill => {
-    return {
-        name: '',
-        level: 'Beginner',
-    };
-};
-
 export type CvInfo = {
     name: string;
     birth: Date;
@@ -80,6 +46,34 @@ export type CvInfo = {
     skills: Skill[];
 };
 
+export const EmptyContact = (): ContactInfo => {
+    return {
+        name: '',
+        url: '',
+        prefix: '',
+        which: 'email',
+        logo: Logo.Email,
+    };
+};
+export const EmptyCourse = (): Course => {
+    return {
+        name: '',
+        start: new Date(),
+        end: new Date(),
+    };
+};
+export const EmptyEducation = (): EducationInfo => {
+    return {
+        name: '',
+        what: [],
+    };
+};
+export const EmptySkill = (): Skill => {
+    return {
+        name: '',
+        level: 'Beginner',
+    };
+};
 export const EmptyCv = (): CvInfo => {
     return {
         name: '',

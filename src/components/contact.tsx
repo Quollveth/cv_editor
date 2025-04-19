@@ -28,7 +28,7 @@ const ContactOptions: ContactInfo[] = [
     {
         name: '',
         which: 'whatsapp',
-        url: 'https://api.whatsapp.com/send?phone=',
+        url: 'https://wa.me/',
         prefix: '+',
         logo: Logo.WhatsApp,
     },
