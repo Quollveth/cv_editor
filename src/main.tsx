@@ -9,10 +9,13 @@ import {
     EmptyContact,
     EmptyCv,
     EmptyEducation,
+    EmptySkill,
+    Skill,
 } from './data';
 import ContactEdit from './components/contact';
 import DynamicList, { ListRenderProps } from './components/list';
 import EducationEdit from './components/education';
+import SkillEditor from './components/skill';
 
 const Editor = () => {
     const [_, setCvData] = useContext(CVContext);
@@ -35,6 +38,38 @@ const Editor = () => {
         [setCvData]
     );
 
+    const ExtraEducationChanger = useCallback(
+        (data: EducationInfo[]) => {
+            setCvData((prev) => {
+                return { ...prev, eduMain: data };
+            });
+        },
+        [setCvData]
+    );
+
+    const SkillChanger = useCallback(
+        (data: Skill[]) => {
+            setCvData((prev) => {
+                return { ...prev, skills: data };
+            });
+        },
+        [setCvData]
+    );
+
+    return (
+        <DynamicList<Skill>
+            title={() => <p>Skills</p>}
+            emptyFactory={EmptySkill}
+            onChange={SkillChanger}
+            render={(config: ListRenderProps<Skill>) => (
+                <SkillEditor
+                    initial={config.initial}
+                    onChange={config.onChange}
+                />
+            )}
+        />
+    );
+
     return (
         <>
             <div className="m-4">
@@ -53,6 +88,17 @@ const Editor = () => {
                     title={() => <p>Main Education Info</p>}
                     emptyFactory={EmptyEducation}
                     onChange={MainEducationChanger}
+                    render={(config: ListRenderProps<EducationInfo>) => (
+                        <EducationEdit
+                            initial={config.initial}
+                            onChange={config.onChange}
+                        />
+                    )}
+                />
+                <DynamicList<EducationInfo>
+                    title={() => <p>Extra Education Info</p>}
+                    emptyFactory={EmptyEducation}
+                    onChange={ExtraEducationChanger}
                     render={(config: ListRenderProps<EducationInfo>) => (
                         <EducationEdit
                             initial={config.initial}

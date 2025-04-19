@@ -42,12 +42,27 @@ export const EmptyEducation = (): EducationInfo => {
     };
 };
 
+type SkillLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Proficient';
+export interface Skill {
+    name: string;
+    logo?: string;
+    level: SkillLevel;
+}
+
+export const EmptySkill = (): Skill => {
+    return {
+        name: '',
+        level: 'Beginner',
+    };
+};
+
 export type CvInfo = {
     name: string;
     about: string;
     contact: ContactInfo[];
     eduMain: EducationInfo[];
     eduExtra: EducationInfo[];
+    skills: Skill[];
 };
 
 export const EmptyCv = (): CvInfo => {
@@ -57,6 +72,7 @@ export const EmptyCv = (): CvInfo => {
         contact: [],
         eduMain: [],
         eduExtra: [],
+        skills: [],
     };
 };
 
