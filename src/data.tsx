@@ -72,6 +72,7 @@ export const EmptySkill = (): Skill => {
 
 export type CvInfo = {
     name: string;
+    birth: Date;
     about: string;
     contact: ContactInfo[];
     eduMain: EducationInfo[];
@@ -82,6 +83,7 @@ export type CvInfo = {
 export const EmptyCv = (): CvInfo => {
     return {
         name: '',
+        birth: new Date(),
         about: '',
         contact: [],
         eduMain: [],

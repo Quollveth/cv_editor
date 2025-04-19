@@ -58,6 +58,57 @@ const Editor = () => {
 
     return (
         <>
+            <div className="m-4 flex flex-col gap-2">
+                <div className="flex gap-2">
+                    <div className="flex flex-col flex-1">
+                        <label htmlFor="name">Name</label>
+                        <input
+                            id="name"
+                            type="text"
+                            className="input input-sm border border-gray-600 rounded px-2 py-1"
+                            onChange={(e) => {
+                                const data = (e.target as HTMLInputElement)
+                                    .value;
+                                setCvData((prev) => {
+                                    return { ...prev, name: data };
+                                });
+                            }}
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="birth">Birthday</label>
+                        <input
+                            id="birth"
+                            type="date"
+                            className="input input-sm border border-gray-600 rounded px-2 py-1"
+                            onChange={(e) => {
+                                const data = (e.target as HTMLInputElement)
+                                    .value;
+                                setCvData((prev) => {
+                                    //prettier-ignore
+                                    return { ...prev, birth: new Date(data as string)};
+                                });
+                            }}
+                        />
+                    </div>
+                </div>
+
+                <div className="flex flex-col flex-1">
+                    <label htmlFor="about">About</label>
+                    <textarea
+                        id="about"
+                        className="input input-sm border border-gray-600 rounded px-2 py-1 h-32 resize-none"
+                        onChange={(e) => {
+                            const data = (e.target as HTMLTextAreaElement)
+                                .value;
+                            setCvData((prev) => {
+                                return { ...prev, about: data };
+                            });
+                        }}
+                    />
+                </div>
+            </div>
+
             <div className="m-4">
                 <DynamicList<ContactInfo>
                     title={() => <p>Contact Info</p>}
