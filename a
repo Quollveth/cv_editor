@@ -1,7 +1,0 @@
-So, in this nerdfont (pragmasevka)
-there is a ligature for unequal != (! =)
-one for javascript unequal !== (! = =)
-but also a secret long unequal !=== (! = = =)
-but it stops at 3 !==== (! = = = =)
-
-anyone has any idea in what context is !=== even valid?

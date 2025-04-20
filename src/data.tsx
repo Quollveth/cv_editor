@@ -39,8 +39,9 @@ export interface Skill {
 export type CvInfo = {
     id: string;
     name: string;
-    birth: Date;
     about: string;
+    birth: Date;
+    keywords: string[];
     contact: ContactInfo[];
     eduMain: EducationInfo[];
     eduExtra: EducationInfo[];
@@ -79,8 +80,9 @@ export const EmptyCv = (): CvInfo => {
     return {
         id: crypto.randomUUID(),
         name: '',
-        birth: new Date(),
         about: '',
+        keywords: [],
+        birth: new Date(),
         contact: [],
         eduMain: [],
         eduExtra: [],

@@ -1,22 +1,19 @@
-import { StrictMode, useCallback, useContext, useState } from 'react';
-import { createRoot } from 'react-dom/client';
+import { useCallback, useContext } from 'react';
 
-import '@/assets/main.css';
 import {
     ContactInfo,
     CVContext,
     EducationInfo,
     EmptyContact,
-    EmptyCv,
     EmptyEducation,
     EmptySkill,
     Skill,
 } from './data';
+
 import ContactEdit from './components/contact';
 import DynamicList, { ListRenderProps } from './components/list';
 import EducationEdit from './components/education';
 import SkillEditor from './components/skill';
-import { LoadCv, SaveCv } from './helpers/saveLoad';
 
 const Editor = () => {
     const [cvData, setCvData] = useContext(CVContext);
@@ -167,51 +164,4 @@ const Editor = () => {
     );
 };
 
-const Panel = () => {
-    const [CvData, setCvData] = useContext(CVContext);
-
-    return (
-        <div>
-            <button
-                className="m-4 p-2 cursor-pointer border-2 border-amber-700"
-                onClick={() => {
-                    SaveCv(CvData);
-                }}
-            >
-                Save
-            </button>
-            <button
-                className="m-4 p-2 cursor-pointer border-2 border-amber-700"
-                onClick={async () => {
-                    const cv = await LoadCv();
-                    setCvData(cv);
-                }}
-            >
-                Load
-            </button>
-            <button
-                className="m-4 p-2 cursor-pointer border-2 border-amber-700"
-                onClick={() => {
-                    console.log(CvData);
-                }}
-            >
-                Print
-            </button>
-        </div>
-    );
-};
-
-const App = () => {
-    const [CvData, setCvData] = useState(EmptyCv());
-
-    return (
-        <StrictMode>
-            <CVContext.Provider value={[CvData, setCvData]}>
-                <Panel />
-                <Editor key={CvData.id} />
-            </CVContext.Provider>
-        </StrictMode>
-    );
-};
-
-createRoot(document.getElementById('root')!).render(<App />);
+export default Editor;
