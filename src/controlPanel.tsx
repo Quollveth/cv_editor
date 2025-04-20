@@ -3,6 +3,7 @@ import { DropdownSymbol } from './components/svg';
 import { useContext, useEffect, useState } from 'react';
 import { CVContext } from './data';
 import { AIContext, AiInfo, DefaultAi } from './ai/data';
+import { AskAi } from './ai/communication';
 
 const Panel = () => {
     const [CvData, setCvData] = useContext(CVContext);
@@ -39,6 +40,14 @@ const Panel = () => {
                     className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
                 >
                     Load
+                </button>
+                <button
+                    onClick={async () => {
+                        AskAi(AiSettings);
+                    }}
+                    className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
+                >
+                    AI Optmize
                 </button>
             </div>
 
