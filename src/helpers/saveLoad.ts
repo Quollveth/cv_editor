@@ -233,6 +233,8 @@ export const LoadCv = async (): Promise<CvInfo> => {
                     resolve(decoded); // <---------------------------- return is here
                 } catch (e: any) {
                     showError(e);
+                    reject();
+                    return;
                 }
             };
 
