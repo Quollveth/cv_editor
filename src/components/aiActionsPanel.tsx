@@ -8,7 +8,12 @@ import { PanelLocale } from '../locale';
 const StyledButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = (
     props
 ) => {
-    return <button {...props} />;
+    return (
+        <button
+            {...props}
+            className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
+        />
+    );
 };
 
 const AiActions = () => {
@@ -24,20 +29,24 @@ const AiActions = () => {
     };
 
     return (
-        <div className="flex">
-            <div className="rotate-90 w-min h-min">
+        <div className="flex items-start gap-2 z-10 shadow-lg border border-gray-200">
+            <div className="rotate-90 transform origin-center">
                 <DropdownButton state={expand} setState={setExpand} />
             </div>
 
             {expand && (
-                <>
+                <div className="flex gap-2 bg-white p-3 rounded-lg ">
                     <StyledButton onClick={() => askAI('getKeywords')}>
-                        {PanelLocale[Settings.language]['KEYWORDS']}
+                        <span className="flex items-center gap-2">
+                            {PanelLocale[Settings.language]['KEYWORDS']}
+                        </span>
                     </StyledButton>
                     <StyledButton onClick={() => askAI('writeAbout')}>
-                        {PanelLocale[Settings.language]['ABOUT']}
+                        <span className="flex items-center gap-2">
+                            {PanelLocale[Settings.language]['ABOUT']}
+                        </span>
                     </StyledButton>
-                </>
+                </div>
             )}
         </div>
     );
