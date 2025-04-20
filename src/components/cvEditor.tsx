@@ -118,6 +118,21 @@ const Editor = () => {
                             });
                         }}
                     />
+                    <label htmlFor="keywords">Keywords</label>
+                    <input
+                        id="keywords"
+                        type="text"
+                        value={cvData.keywords.join(',')}
+                        className="input input-sm border border-gray-600 rounded px-2 py-1"
+                        onChange={(e) => {
+                            //prettier-ignore
+                            const data = (e.target as HTMLInputElement).value;
+
+                            setCvData((prev) => {
+                                return { ...prev, keywords: data.split(',') };
+                            });
+                        }}
+                    />
                 </div>
             </div>
 

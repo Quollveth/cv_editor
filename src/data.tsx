@@ -40,6 +40,15 @@ export interface Skill {
     logo?: string;
     level: SkillLevel;
 }
+
+export type LangSkill = SkillLevel | 'Fluent' | 'Native';
+export const LangLevel: Record<SkillLevel, LangSkill> = {
+    Beginner: 'Beginner',
+    Intermediate: 'Intermediate',
+    Advanced: 'Advanced',
+    Proficient: 'Fluent',
+    Expert: 'Native',
+};
 export interface Language {
     id: string;
     name: string;

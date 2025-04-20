@@ -1,5 +1,5 @@
 import React from 'react';
-import { SkillLevel } from '../data';
+import { LangSkill, SkillLevel } from '../data';
 
 export type AiInfo = {
     id: string;
@@ -37,22 +37,30 @@ export const AIContext = React.createContext<AiContextType>([
     },
 ]);
 
+//
+//
+//
+
+type LangsAi = {
+    id: string;
+    name: string;
+    level: LangSkill;
+};
+type SkillsAi = {
+    id: string;
+    name: string;
+    level: SkillLevel;
+};
+type EduAi = {
+    id: string;
+    institution: string;
+    courses: string[];
+};
 export type CvAiData = {
-    skills: {
-        id: string;
-        name: string;
-        level: SkillLevel;
-    }[];
-    eduMain: {
-        id: string;
-        intitution: string;
-        courses: { name: string; id: string }[];
-    }[];
-    eduExtra: {
-        id: string;
-        institution: string;
-        courses: { name: string; id: string }[];
-    }[];
     about: string;
     keywords: string[];
+    languages: LangsAi[];
+    skills: SkillsAi[];
+    educationMain: EduAi[];
+    educationExtra: EduAi[];
 };

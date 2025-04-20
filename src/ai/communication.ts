@@ -1,35 +1,129 @@
 import Swal from 'sweetalert2';
+import { CvInfo, LangLevel, SkillLevel } from '../data';
 import { AiInfo, CvAiData } from './data';
-import { z } from 'zod';
 
-const ErrorToastTime = 3000;
+type Message = {
+    role: 'error' | 'system' | 'user' | 'tool';
+    content: string;
+};
+//prettier-ignore
+const ERROR_MESSAGE: Message = {role: 'error', content: ''};
+const ERROR_TOAST_TIME = 5000;
+export const ShowError = (error: string, text: string) => {
+    console.error(`${error}:${text}`);
+    Swal.fire({
+        title: error,
+        text: text,
+        icon: 'error',
+        toast: true,
+        position: 'top-end',
+        timer: ERROR_TOAST_TIME,
+    });
+};
 
-const ModelResponseSchema = z.object({
-    choices: z.array(
-        z.object({
-            message: z.object({
-                content: z.string(),
-            }),
-        })
-    ),
-});
+export type AiRequest = 'writeAbout' | 'getKeywords';
 
-export type Message = { role: 'system' | 'user'; content: string };
+const ResponseType: Record<AiRequest, string> = {
+    writeAbout: 'plaint text',
+    getKeywords: 'string array',
+} as const;
 
-export type AiRequests =
-    | { type: 'About'; data: CvAiData }
-    | { type: 'GetKeywords'; data: CvAiData };
-
-const SystemPrompts: Message[] = [
-    {
+const GetSystemPrompts = (req: AiRequest): Message[] => {
+    //prettier-ignore
+    const prompts: Message[] = [{
         role: 'system',
-        content: '',
+        content: "You are an assistant helping optmize the user's CV\nYou must respond to requests with only the requested data and no additional information so it may be parsed",
     },
-] as const;
+    {
+	    role: 'system',
+		content: `Expected response type: ${ResponseType[req]}`,
+	}];
 
-export async function AskAi(agent: AiInfo) {
-    const message = 'Model connection test';
+    switch (req) {
+        case 'getKeywords':
+            return prompts.concat({
+                role: 'system',
+                //prettier-ignore
+                content: "Given the information currently present on the CV, create a list of keywords that best represent the user's knowledge and skills",
+            });
+        case 'writeAbout':
+            return prompts.concat({
+                role: 'system',
+                //prettier-ignore
+                content: 'Given the information currently present on the CV, improve the "about" section',
+            });
 
+        default:
+            const exhaustive: never = req;
+            throw new Error(`Invalid AI request: ${exhaustive}`);
+    }
+};
+
+export const EncodeAiCv = (info: CvInfo): CvAiData => {
+    return {
+        about: info.about,
+        keywords: [...info.keywords],
+        languages: info.languages.map((l) => {
+            return {
+                id: l.id,
+                name: l.name,
+                level: LangLevel[l.level],
+            };
+        }),
+        skills: info.skills.map((s) => {
+            return {
+                id: s.id,
+                name: s.name,
+                level: s.level,
+            };
+        }),
+        educationMain: info.eduMain.map((e) => {
+            return {
+                id: e.id,
+                institution: e.name,
+                courses: e.what.map((c) => c.name),
+            };
+        }),
+        educationExtra: info.eduExtra.map((e) => {
+            return {
+                id: e.id,
+                institution: e.name,
+                courses: e.what.map((c) => c.name),
+            };
+        }),
+    };
+};
+
+export const EncodeCvMessage = (info: CvInfo, tool?: boolean): Message => {
+    const encoded = JSON.stringify(EncodeAiCv(info), null, 2);
+
+    return {
+        role: tool ? 'tool' : 'system',
+        content: `Current CV state:\n${encoded}`,
+    };
+};
+
+export async function PerformRequest(
+    agent: AiInfo,
+    data: CvInfo,
+    action: AiRequest
+): Promise<CvInfo> {
+    const prompts = GetSystemPrompts(action);
+
+    let mutableCv = { ...data };
+    const initialCvState = EncodeCvMessage(mutableCv);
+
+    const messages = prompts.concat(initialCvState);
+
+    const response = await callLLM(agent, messages);
+
+    console.log(response);
+}
+
+export async function callLLM(
+    agent: AiInfo,
+    messages: Message[]
+): Promise<Message> {
     const response = await fetch(agent.endpoint, {
         method: 'POST',
         headers: {
@@ -38,39 +132,34 @@ export async function AskAi(agent: AiInfo) {
         },
         body: JSON.stringify({
             model: agent.model,
-            messages: SystemPrompts.concat({ role: 'user', content: message }),
+            messages: messages,
         }),
     });
 
     if (response.status !== 200) {
         const error = await response.json();
-        Swal.fire({
-            title: 'Error talking to model',
-            text: `Status: ${response.status}\n${error.error.message}`,
-            icon: 'error',
-            toast: true,
-            position: 'top-end',
-            timer: ErrorToastTime,
-        });
-        return;
+        ShowError(
+            'Error talking to endpoint',
+            `Status: ${response.status}\n${error.error.message}`
+        );
+        return ERROR_MESSAGE;
     }
 
-    const body = await response.json();
-    const parseResult = ModelResponseSchema.safeParse(body);
-
-    if (!parseResult.success) {
-        console.error('Invalid response structure:', parseResult.error);
-        Swal.fire({
-            title: 'Invalid response',
-            text: 'The endpoint provided a response in a unrecognized format',
-            icon: 'error',
-            toast: true,
-            position: 'top-end',
-            timer: ErrorToastTime,
-        });
-        return;
+    let body: any;
+    try {
+        body = await response.json();
+    } catch (e) {
+        ShowError('The endpoint produced an invalid response', `${e}`);
+        return ERROR_MESSAGE;
     }
 
-    const content = parseResult.data.choices[0].message.content;
-    console.log(content);
+    const content = body.choices[0].message;
+    if (!content.role || !content.content) {
+        ShowError(
+            'The endpoint produced an invalid response',
+            "Fields 'role' and 'content' not present"
+        );
+        return ERROR_MESSAGE;
+    }
+    return content;
 }
