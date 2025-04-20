@@ -58,11 +58,6 @@ interface DynamicListProps<T> {
 }
 
 const DynamicList = <T extends Object>(props: DynamicListProps<T>) => {
-    useEffect(() => {
-        console.log('list rendered');
-        console.log(props.starting);
-    }, []);
-
     const initializer = () => {
         const list = (props.starting ?? []).map((item) => ({
             ...item,

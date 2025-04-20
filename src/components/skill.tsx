@@ -5,13 +5,25 @@ import { ListRenderProps } from './list';
 import { EmptySkill, Skill, SkillLevel } from '../data';
 
 const SkillEditor = (props: ListRenderProps<Skill>) => {
-    const [svgString, setSvgString] = useState('');
-    const logoRef = useRef<HTMLDivElement>(null);
+    //prettier-ignore
+    const [skill, setSkill] = useState<Skill>( () => props.initial ?? EmptySkill());
 
-    const changeLogo = () => {
-        if (!logoRef.current) {
-            return;
-        }
+    const logoRef = useRef<HTMLDivElement>(null);
+    const stringRef = useRef<HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+        props.onChange(skill);
+    }, [skill]);
+
+    const editSkill = (data: Partial<Skill>) => {
+        setSkill((prev) => ({
+            ...prev,
+            ...data,
+        }));
+    };
+
+    const changeLogo = (svgString: string) => {
+        if (!logoRef.current) return;
 
         const sanitized = DOMPurify.sanitize(svgString, {
             USE_PROFILES: { svg: true },
@@ -19,7 +31,6 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
 
         const doc = new DOMParser().parseFromString(sanitized, 'image/svg+xml');
         const svg = doc.querySelector('svg');
-
         if (!svg) return;
 
         svg.setAttribute('width', '2.5em');
@@ -34,17 +45,14 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
         editSkill({ logo: btoa(updatedSvgString) });
     };
 
-    const [skill, setSkill] = useState(props.initial ?? EmptySkill());
     useEffect(() => {
-        props.onChange(skill);
-    }, [skill]);
+        if (props.initial.logo === '') {
+            return;
+        }
 
-    const editSkill = (data: Partial<Skill>) => {
-        setSkill({
-            ...skill,
-            ...data,
-        });
-    };
+        const decoded = atob(props.initial.logo!);
+        changeLogo(decoded);
+    }, []);
 
     return (
         <div className="border-1 border-gray-600 p-2">
@@ -55,6 +63,7 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
                 />
                 <input
                     className="border-1 border-gray-400 flex-1 p-2 text-lg"
+                    value={skill.name}
                     onInput={(e) =>
                         editSkill({
                             name: (e.target as HTMLInputElement).value,
@@ -62,6 +71,7 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
                     }
                 />
                 <select
+                    value={skill.level}
                     onChange={(e) =>
                         editSkill({
                             //prettier-ignore
@@ -78,14 +88,13 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
             <div className="my-2 flex gap-2">
                 <button
                     className="border-1 border-gray-400 p-2 rounded"
-                    onClick={changeLogo}
+                    //prettier-ignore
+                    onClick={()=>changeLogo((stringRef.current as HTMLTextAreaElement).value)}
                 >
                     Upload
                 </button>
                 <textarea
-                    onInput={(e) => {
-                        setSvgString((e.target as HTMLTextAreaElement).value);
-                    }}
+                    ref={stringRef}
                     placeholder="SVG string"
                     className="resize-none border-1 border-gray-600 h-12 w-full text-xs"
                 />
