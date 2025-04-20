@@ -19,7 +19,7 @@ import SkillEditor from './components/skill';
 import { LoadCv, SaveCv } from './helpers';
 
 const Editor = () => {
-    const [_, setCvData] = useContext(CVContext);
+    const [cvData, setCvData] = useContext(CVContext);
 
     const ContactChanger = useCallback(
         (data: ContactInfo[]) => {
@@ -66,6 +66,7 @@ const Editor = () => {
                         <input
                             id="name"
                             type="text"
+                            value={cvData.name}
                             className="input input-sm border border-gray-600 rounded px-2 py-1"
                             onChange={(e) => {
                                 const data = (e.target as HTMLInputElement)
@@ -81,6 +82,10 @@ const Editor = () => {
                         <input
                             id="birth"
                             type="date"
+                            //prettier-ignore
+                            value={
+						        cvData.birth ? new Date(cvData.birth).toISOString().split("T")[0] : ""
+						    }
                             className="input input-sm border border-gray-600 rounded px-2 py-1"
                             onChange={(e) => {
                                 const data = (e.target as HTMLInputElement)
@@ -98,6 +103,7 @@ const Editor = () => {
                     <label htmlFor="about">About</label>
                     <textarea
                         id="about"
+                        value={cvData.about}
                         className="input input-sm border border-gray-600 rounded px-2 py-1 h-32 resize-none"
                         onChange={(e) => {
                             const data = (e.target as HTMLTextAreaElement)
@@ -115,6 +121,7 @@ const Editor = () => {
                     title={() => <p>Contact Info</p>}
                     emptyFactory={EmptyContact}
                     onChange={ContactChanger}
+                    starting={cvData.contact}
                     render={(config: ListRenderProps<ContactInfo>) => (
                         <ContactEdit
                             initial={config.initial}
@@ -126,6 +133,7 @@ const Editor = () => {
                     title={() => <p>Skills</p>}
                     emptyFactory={EmptySkill}
                     onChange={SkillChanger}
+                    starting={cvData.skills}
                     render={(config: ListRenderProps<Skill>) => (
                         <SkillEditor
                             initial={config.initial}
@@ -137,6 +145,7 @@ const Editor = () => {
                     title={() => <p>Main Education Info</p>}
                     emptyFactory={EmptyEducation}
                     onChange={MainEducationChanger}
+                    starting={cvData.eduMain}
                     render={(config: ListRenderProps<EducationInfo>) => (
                         <EducationEdit
                             initial={config.initial}
@@ -148,6 +157,7 @@ const Editor = () => {
                     title={() => <p>Extra Education Info</p>}
                     emptyFactory={EmptyEducation}
                     onChange={ExtraEducationChanger}
+                    starting={cvData.eduExtra}
                     render={(config: ListRenderProps<EducationInfo>) => (
                         <EducationEdit
                             initial={config.initial}
@@ -181,6 +191,14 @@ const App = () => {
                 }}
             >
                 Load
+            </button>
+            <button
+                className="m-4 p-2 cursor-pointer border-2 border-amber-700"
+                onClick={() => {
+                    console.log(CvData);
+                }}
+            >
+                Print
             </button>
             <CVContext.Provider value={[CvData, setCvData]}>
                 <Editor />

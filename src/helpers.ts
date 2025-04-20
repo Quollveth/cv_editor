@@ -1,29 +1,12 @@
 import Swal from 'sweetalert2';
 
 //prettier-ignore
-import {ContactInfo, Course, CvInfo, EducationInfo, EmptyContact, EmptyCourse, EmptyCv, EmptyEducation, EmptySkill, Skill, SkillLevel, Social,} from './data';
+import {ContactInfo, Course, CvInfo, EducationInfo, EmptyCv, Skill, SkillLevel, Social,} from './data';
 import { getSocialLogo, getSocialPrefix } from './components/logos/social';
 import { ValidateCv } from './zod';
 
-const GetAge = (birthday: Date): number => {
-    const today = new Date();
-
-    let age = today.getFullYear() - birthday.getFullYear();
-
-    const happened =
-        today.getMonth() > birthday.getMonth() ||
-        (today.getMonth() === birthday.getMonth() &&
-            today.getDate() >= birthday.getDate());
-
-    if (!happened) {
-        age--;
-    }
-
-    return age;
-};
-
 const ToCourseDate = (date: Date, yearOnly: boolean): string => {
-    return `${yearOnly ? '' : date.getMonth()}/${date.getFullYear()}`;
+    return `${yearOnly ? '' : date.getMonth() + '/'}${date.getFullYear()}`;
 };
 
 type ContactSave = {
@@ -97,72 +80,62 @@ function EncodeCv(info: CvInfo): CvInfoSave {
 }
 
 function DecodeCv(info: CvInfoSave): CvInfo {
-    const parseCourseDate = (str: string): Date => {
-        const [monthStr, yearStr] = str.includes('/')
-            ? str.split('/')
-            : ['0', str];
-        const month = parseInt(monthStr, 10);
-        const year = parseInt(yearStr, 10);
-        return new Date(year, month || 0);
-    };
+    const cv = EmptyCv();
 
-    return {
-        name: info.name ?? EmptyCv().name,
-        birth: info.birth ?? EmptyCv().birth,
-        about: info.about ?? EmptyCv().about,
-        contact:
-            info.contact?.map(
-                (c): ContactInfo => ({
-                    ...EmptyContact(),
-                    name: c.name ?? EmptyContact().name,
-                    url: c.url ?? EmptyContact().url,
-                    which: c.which ?? 'email',
-                    prefix: getSocialPrefix(c.which),
-                    logo: getSocialLogo(c.which),
-                })
-            ) ?? [],
-        eduMain:
-            info.eduMain?.map(
-                (e): EducationInfo => ({
-                    ...EmptyEducation(),
-                    name: e.name ?? EmptyEducation().name,
-                    what:
-                        e.what?.map(
-                            (c): Course => ({
-                                ...EmptyCourse(),
-                                name: c.name ?? EmptyCourse().name,
-                                start: parseCourseDate(c.start),
-                                end: parseCourseDate(c.end),
-                            })
-                        ) ?? [],
-                })
-            ) ?? [],
-        eduExtra:
-            info.eduExtra?.map(
-                (e): EducationInfo => ({
-                    ...EmptyEducation(),
-                    name: e.name ?? EmptyEducation().name,
-                    what:
-                        e.what?.map(
-                            (c): Course => ({
-                                ...EmptyCourse(),
-                                name: c.name ?? EmptyCourse().name,
-                                start: parseCourseDate(c.start),
-                                end: parseCourseDate(c.end),
-                            })
-                        ) ?? [],
-                })
-            ) ?? [],
-        skills:
-            info.skills?.map(
-                (s): Skill => ({
-                    ...EmptySkill(),
-                    name: s.name ?? EmptySkill().name,
-                    level: s.level ?? EmptySkill().level,
-                    logo: s.logo,
-                })
-            ) ?? [],
-    };
+    cv.name = info.name;
+    cv.about = info.about;
+    cv.birth = new Date(info.birth);
+
+    if (info.contact.length !== 0) {
+        cv.contact = info.contact.map((c) => {
+            return {
+                name: c.name,
+                url: c.url,
+                which: c.which,
+                prefix: getSocialPrefix(c.which),
+                logo: getSocialLogo(c.which),
+            } as ContactInfo;
+        });
+    }
+    if (info.skills.length !== 0) {
+        cv.skills = info.skills.map((s) => {
+            return {
+                name: s.name,
+                level: s.level,
+                logo: s.logo ? atob(s.logo) : '',
+            } as Skill;
+        });
+    }
+    if (info.eduMain.length !== 0) {
+        cv.eduMain = info.eduMain.map((e) => {
+            return {
+                name: e.name,
+                what: e.what.map((c) => {
+                    return {
+                        name: c.name,
+                        start: new Date(c.start),
+                        end: new Date(c.end),
+                    } as Course;
+                }),
+            } as EducationInfo;
+        });
+    }
+    if (info.eduExtra.length !== 0) {
+        cv.eduMain = info.eduExtra.map((e) => {
+            return {
+                name: e.name,
+                what: e.what.map((c) => {
+                    return {
+                        name: c.name,
+                        start: new Date(c.start),
+                        end: new Date(c.end),
+                    } as Course;
+                }),
+            } as EducationInfo;
+        });
+    }
+
+    return cv;
 }
 
 export const SaveCv = async (data: CvInfo) => {

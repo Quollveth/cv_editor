@@ -11,7 +11,8 @@ type ListReducerAction<T extends Object> =
     | { type: 'Add' }
     | { type: 'Remove'; idx: number }
     | { type: 'Sort'; data: ListItem<T>[] }
-    | { type: 'Edit'; idx: number; data: ListItem<T> };
+    | { type: 'Edit'; idx: number; data: ListItem<T> }
+    | { type: 'Reset'; data: ListItem<T>[] };
 
 function ListReducer<T extends Object>(
     factory: () => T,
@@ -29,6 +30,8 @@ function ListReducer<T extends Object>(
             return state.map((it, idx) =>
                 idx === action.idx ? action.data : it
             );
+        case 'Reset':
+            return action.data;
         default:
             const exhaustive: never = action;
             throw new Error(`Dumbass broke the reducer: ${exhaustive}`);
@@ -59,6 +62,10 @@ interface DynamicListProps<T> {
 
 const DynamicList = <T extends Object>(props: DynamicListProps<T>) => {
     const initial = (props.starting ?? []) as ListItem<T>[];
+    useEffect(() => {
+        console.log('Rendered list with initial data:');
+        console.log(initial);
+    }, []);
 
     const [items, dispatch] = useReducer(
         CreateListReducer<T>(props.emptyFactory),
