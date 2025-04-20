@@ -101,12 +101,29 @@ function EncodeCv(info: CvInfo): CvInfoSave {
 
 function DecodeCv(info: CvInfoSave): CvInfo {
     const cv = EmptyCv();
+
+    const courseMapper = (c: CourseSave): Course => {
+        return {
+            id: crypto.randomUUID(),
+            name: c.name,
+            start: FromCourseDate(c.start),
+            end: FromCourseDate(c.end),
+            yearOnly: c.start.split('/').length === 1,
+        };
+    };
+
     cv.id = crypto.randomUUID();
 
     cv.name = info.name;
     cv.about = info.about;
     cv.birth = new Date(info.birth);
-    cv.skills = [...info.skills];
+
+    cv.skills = info.skills.map((s) => {
+        return {
+            ...s,
+            id: crypto.randomUUID(),
+        } as Skill;
+    });
 
     if (info.contact.length !== 0) {
         cv.contact = info.contact.map((c) => {
@@ -122,30 +139,18 @@ function DecodeCv(info: CvInfoSave): CvInfo {
     if (info.eduMain.length !== 0) {
         cv.eduMain = info.eduMain.map((e) => {
             return {
+                id: crypto.randomUUID(),
                 name: e.name,
-                what: e.what.map((c) => {
-                    return {
-                        name: c.name,
-                        start: FromCourseDate(c.start),
-                        end: FromCourseDate(c.end),
-                        yearOnly: c.start.split('/').length === 1,
-                    } as Course;
-                }),
+                what: e.what.map(courseMapper),
             } as EducationInfo;
         });
     }
     if (info.eduExtra.length !== 0) {
         cv.eduMain = info.eduExtra.map((e) => {
             return {
+                id: crypto.randomUUID(),
                 name: e.name,
-                what: e.what.map((c) => {
-                    return {
-                        name: c.name,
-                        start: FromCourseDate(c.start),
-                        end: FromCourseDate(c.end),
-                        yearOnly: c.start.split('/').length === 1,
-                    } as Course;
-                }),
+                what: e.what.map(courseMapper),
             } as EducationInfo;
         });
     }
