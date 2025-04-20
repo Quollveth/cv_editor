@@ -1,12 +1,22 @@
 import Swal from 'sweetalert2';
 
 //prettier-ignore
-import {ContactInfo, Course, CvInfo, EducationInfo, EmptyCv, Skill, SkillLevel, Social,} from './data';
-import { getSocialLogo, getSocialPrefix } from './components/logos/social';
-import { ValidateCv } from './zod';
+import {ContactInfo, Course, CvInfo, EducationInfo, EmptyCv, Skill, SkillLevel, Social,} from '../data';
+import { getSocialLogo, getSocialPrefix } from '../components/logos/social';
+import { ValidateCv } from '../zod';
 
 const ToCourseDate = (date: Date, yearOnly: boolean): string => {
     return `${yearOnly ? '' : date.getMonth() + '/'}${date.getFullYear()}`;
+};
+const FromCourseDate = (dateStr: string): Date => {
+    const parts = dateStr.split('/');
+    if (parts.length === 2) {
+        const month = parseInt(parts[0], 10) - 1;
+        const year = parseInt(parts[1], 10);
+        return new Date(year, month);
+    }
+    const year = parseInt(parts[0], 10);
+    return new Date(year, 0);
 };
 
 type ContactSave = {
@@ -102,7 +112,8 @@ function DecodeCv(info: CvInfoSave): CvInfo {
             return {
                 name: s.name,
                 level: s.level,
-                logo: s.logo ? atob(s.logo) : '',
+                //FIX: wtf
+                //logo: s.logo ? atob(s.logo) : '',
             } as Skill;
         });
     }
@@ -113,8 +124,9 @@ function DecodeCv(info: CvInfoSave): CvInfo {
                 what: e.what.map((c) => {
                     return {
                         name: c.name,
-                        start: new Date(c.start),
-                        end: new Date(c.end),
+                        start: FromCourseDate(c.start),
+                        end: FromCourseDate(c.end),
+                        yearOnly: c.start.split('/').length === 1,
                     } as Course;
                 }),
             } as EducationInfo;
@@ -127,8 +139,9 @@ function DecodeCv(info: CvInfoSave): CvInfo {
                 what: e.what.map((c) => {
                     return {
                         name: c.name,
-                        start: new Date(c.start),
-                        end: new Date(c.end),
+                        start: FromCourseDate(c.start),
+                        end: FromCourseDate(c.end),
+                        yearOnly: c.start.split('/').length === 1,
                     } as Course;
                 }),
             } as EducationInfo;
@@ -161,7 +174,8 @@ export const SaveCv = async (data: CvInfo) => {
 };
 
 export const LoadCv = async (): Promise<CvInfo> => {
-    const showError = () => {
+    const showError = (e: any) => {
+        console.error(e);
         Swal.fire({
             title: 'Invalid JSON',
             text: 'Your file sucks ass, use a good one next time dumbass.',
@@ -184,16 +198,19 @@ export const LoadCv = async (): Promise<CvInfo> => {
             reader.onload = async () => {
                 try {
                     const jason = JSON.parse(reader.result as string);
-
+                    console.log(jason);
+                    /*
                     if (!ValidateCv(jason)) {
                         showError();
                         reject();
                         return;
                     }
+*/
+                    const decoded = DecodeCv(jason);
 
-                    resolve(DecodeCv(jason)); // <---------------------------- return is here
-                } catch (e) {
-                    showError();
+                    resolve(decoded); // <---------------------------- return is here
+                } catch (e: any) {
+                    showError(e);
                 }
             };
 

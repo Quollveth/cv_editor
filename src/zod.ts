@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CvInfoSave } from './helpers';
+import { CvInfoSave } from './helpers/saveLoad';
 
 export const SocialSchema = z.enum([
     'bluesky',

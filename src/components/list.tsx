@@ -62,10 +62,6 @@ interface DynamicListProps<T> {
 
 const DynamicList = <T extends Object>(props: DynamicListProps<T>) => {
     const initial = (props.starting ?? []) as ListItem<T>[];
-    useEffect(() => {
-        console.log('Rendered list with initial data:');
-        console.log(initial);
-    }, []);
 
     const [items, dispatch] = useReducer(
         CreateListReducer<T>(props.emptyFactory),
