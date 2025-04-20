@@ -1,7 +1,9 @@
-import { JSX, useEffect, useReducer, useState } from 'react';
+import { JSX, useContext, useEffect, useReducer, useState } from 'react';
 import { AddSymbol, RemoveSymbol } from './svg';
 import { ReactSortable } from 'react-sortablejs';
 import DropdownButton from './dropdownButton';
+import { SettingsContext } from '../settings';
+import { EditorLocale } from '../locale';
 
 // ReactSortable type definitions only allows objects with an 'id' field
 export type ListItem<T extends Object> = T & {
@@ -59,6 +61,8 @@ interface DynamicListProps<T> {
 }
 
 const DynamicList = <T extends Object>(props: DynamicListProps<T>) => {
+    const [settings] = useContext(SettingsContext);
+
     const initializer = () => {
         const list = (props.starting ?? []).map((item) => ({
             ...item,
@@ -88,7 +92,7 @@ const DynamicList = <T extends Object>(props: DynamicListProps<T>) => {
                         className="flex items-center gap-4 border-1 border-gray-400 p-1 px-2 rounded"
                         onClick={() => dispatch({ type: 'Add' })}
                     >
-                        <span>Add Item</span>
+                        <span>{EditorLocale[settings.language]['ADD']}</span>
                         <div className="hover:text-blue-700">
                             <AddSymbol />
                         </div>

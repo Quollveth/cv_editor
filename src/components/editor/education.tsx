@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Course, EducationInfo, EmptyCourse, EmptyEducation } from '../../data';
 import DynamicList, { ListRenderProps } from '../list';
+import { SettingsContext } from '../../settings';
+import { EditorLocale } from '../../locale';
 
 const CourseEdit = (props: ListRenderProps<Course>) => {
+    const [settings] = useContext(SettingsContext);
     const [course, setCourse] = useState(props.initial ?? EmptyCourse());
 
     const getISODate = (date: Date) => {
@@ -46,7 +49,7 @@ const CourseEdit = (props: ListRenderProps<Course>) => {
         <div className="flex items-center space-x-4 p-4 bg-white rounded shadow-sm">
             <input
                 type="text"
-                placeholder="Course"
+                placeholder={EditorLocale[settings.language]['COURSE']}
                 name="name"
                 value={course.name}
                 onChange={handleChange}
@@ -55,7 +58,7 @@ const CourseEdit = (props: ListRenderProps<Course>) => {
 
             <div className="flex items-center space-x-1">
                 <label htmlFor="start" className="text-sm text-gray-600">
-                    Start
+                    {EditorLocale[settings.language]['START']}
                 </label>
                 <input
                     id="start"
@@ -69,7 +72,7 @@ const CourseEdit = (props: ListRenderProps<Course>) => {
 
             <div className="flex items-center space-x-1">
                 <label htmlFor="end" className="text-sm text-gray-600">
-                    End
+                    {EditorLocale[settings.language]['END']}
                 </label>
                 <input
                     id="end"
@@ -91,7 +94,7 @@ const CourseEdit = (props: ListRenderProps<Course>) => {
                     className="form-checkbox h-4 w-4 text-blue-600"
                 />
                 <label htmlFor="yearOnly" className="text-sm text-gray-600">
-                    Year Only
+                    {EditorLocale[settings.language]['YEARONLY']}
                 </label>
             </div>
         </div>
@@ -99,6 +102,8 @@ const CourseEdit = (props: ListRenderProps<Course>) => {
 };
 
 export default function EducationEdit(props: ListRenderProps<EducationInfo>) {
+    const [settings] = useContext(SettingsContext);
+
     const [data, setData] = useState(props.initial ?? EmptyEducation());
     const editData = (newData: Partial<EducationInfo>) => {
         setData({
@@ -125,7 +130,7 @@ export default function EducationEdit(props: ListRenderProps<EducationInfo>) {
                         className="border-1 border-gray-300 w-full"
                         type="text"
                         value={data.name}
-                        placeholder="Institution"
+                        placeholder={EditorLocale[settings.language]['SCHOOL']}
                         onInput={(e) =>
                             editData({
                                 name: (e.target as HTMLInputElement).value,

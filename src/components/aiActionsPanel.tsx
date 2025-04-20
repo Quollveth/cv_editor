@@ -11,7 +11,7 @@ const StyledButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = (
     return (
         <button
             {...props}
-            className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
+            className="px-4 py-2 bg-slate-600 text-white rounded hover:bg-gray-700 transition"
         />
     );
 };
@@ -37,14 +37,10 @@ const AiActions = () => {
             {expand && (
                 <div className="flex gap-2 bg-white p-3 rounded-lg ">
                     <StyledButton onClick={() => askAI('getKeywords')}>
-                        <span className="flex items-center gap-2">
-                            {PanelLocale[Settings.language]['KEYWORDS']}
-                        </span>
+                        {PanelLocale[Settings.language]['KEYWORDS']}
                     </StyledButton>
                     <StyledButton onClick={() => askAI('writeAbout')}>
-                        <span className="flex items-center gap-2">
-                            {PanelLocale[Settings.language]['ABOUT']}
-                        </span>
+                        {PanelLocale[Settings.language]['ABOUT']}
                     </StyledButton>
                 </div>
             )}

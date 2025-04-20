@@ -17,9 +17,12 @@ import ContactEdit from './editor/contact';
 import SkillEditor from './editor/skill';
 import EducationEdit from './editor/education';
 import LanguageEditor from './editor/language';
+import { SettingsContext } from '../settings';
+import { EditorLocale } from '../locale';
 
 const Editor = () => {
     const [cvData, setCvData] = useContext(CVContext);
+    const [settings] = useContext(SettingsContext);
 
     const ContactChanger = useCallback(
         (data: ContactInfo[]) => {
@@ -67,7 +70,9 @@ const Editor = () => {
             <div className="m-4 flex flex-col gap-2">
                 <div className="flex gap-2">
                     <div className="flex flex-col flex-1">
-                        <label htmlFor="name">Name</label>
+                        <label htmlFor="name">
+                            {EditorLocale[settings.language]['NAME']}
+                        </label>
                         <input
                             id="name"
                             type="text"
@@ -83,7 +88,9 @@ const Editor = () => {
                         />
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="birth">Birthday</label>
+                        <label htmlFor="birth">
+                            {EditorLocale[settings.language]['BIRTHDAY']}
+                        </label>
                         <input
                             id="birth"
                             type="date"
@@ -105,7 +112,9 @@ const Editor = () => {
                 </div>
 
                 <div className="flex flex-col flex-1">
-                    <label htmlFor="about">About</label>
+                    <label htmlFor="about">
+                        {EditorLocale[settings.language]['ABOUT']}
+                    </label>
                     <textarea
                         id="about"
                         value={cvData.about}
@@ -118,7 +127,9 @@ const Editor = () => {
                             });
                         }}
                     />
-                    <label htmlFor="keywords">Keywords</label>
+                    <label htmlFor="keywords">
+                        {EditorLocale[settings.language]['KEYWORDS']}
+                    </label>
                     <input
                         id="keywords"
                         type="text"
@@ -138,7 +149,9 @@ const Editor = () => {
 
             <div className="m-4">
                 <DynamicList<ContactInfo>
-                    title={() => <p>Contact Info</p>}
+                    title={() => (
+                        <p>{EditorLocale[settings.language]['CONTACT']}</p>
+                    )}
                     emptyFactory={EmptyContact}
                     onChange={ContactChanger}
                     starting={cvData.contact}
@@ -150,7 +163,9 @@ const Editor = () => {
                     )}
                 />
                 <DynamicList<Skill>
-                    title={() => <p>Skills</p>}
+                    title={() => (
+                        <p>{EditorLocale[settings.language]['SKILLS']}</p>
+                    )}
                     emptyFactory={EmptySkill}
                     onChange={SkillChanger}
                     starting={cvData.skills}
@@ -162,7 +177,9 @@ const Editor = () => {
                     )}
                 />
                 <DynamicList<Language>
-                    title={() => <p>Languages</p>}
+                    title={() => (
+                        <p>{EditorLocale[settings.language]['LANGUAGES']}</p>
+                    )}
                     emptyFactory={EmptyLanguage}
                     onChange={LanguageChanger}
                     starting={cvData.languages}
@@ -174,7 +191,9 @@ const Editor = () => {
                     )}
                 />
                 <DynamicList<EducationInfo>
-                    title={() => <p>Main Education Info</p>}
+                    title={() => (
+                        <p>{EditorLocale[settings.language]['EDUMAIN']}</p>
+                    )}
                     emptyFactory={EmptyEducation}
                     onChange={MainEducationChanger}
                     starting={cvData.eduMain}
@@ -186,7 +205,9 @@ const Editor = () => {
                     )}
                 />
                 <DynamicList<EducationInfo>
-                    title={() => <p>Extra Education Info</p>}
+                    title={() => (
+                        <p>{EditorLocale[settings.language]['EDUEXTRA']}</p>
+                    )}
                     emptyFactory={EmptyEducation}
                     onChange={ExtraEducationChanger}
                     starting={cvData.eduExtra}

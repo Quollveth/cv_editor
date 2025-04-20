@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { EmptyLanguage, Language, SkillLevel } from '../../data';
 import { ListRenderProps } from '../list';
+import { SettingsContext } from '../../settings';
+import { EditorLocale } from '../../locale';
 
 const LanguageEditor = (props: ListRenderProps<Language>) => {
+    const [settings] = useContext(SettingsContext);
+
     const [language, setLanguage] = useState<Language>(
         () => props.initial ?? EmptyLanguage()
     );
@@ -38,11 +42,16 @@ const LanguageEditor = (props: ListRenderProps<Language>) => {
                     })
                 }
             >
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-                <option value="Proficient">Fluent</option>
-                <option value="Expert">Native</option>
+                {/*prettier-ignore*/}
+                <option value="Beginner">{EditorLocale[settings.language]['BEGINNER']}</option>
+                {/*prettier-ignore*/}
+                <option value="Intermediate">{EditorLocale[settings.language]['INTERMEDIATE']}</option>
+                {/*prettier-ignore*/}
+                <option value="Advanced">{EditorLocale[settings.language]['ADVANCED']}</option>
+                {/*prettier-ignore*/}
+                <option value="Proficient">{EditorLocale[settings.language]['FLUENT']}</option>
+                {/*prettier-ignore*/}
+                <option value="Expert">{EditorLocale[settings.language]['NATIVE']}</option>
             </select>
         </div>
     );

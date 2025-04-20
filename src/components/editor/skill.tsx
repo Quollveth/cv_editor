@@ -1,10 +1,14 @@
 import DOMPurify from 'dompurify';
 
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { ListRenderProps } from '../list';
 import { EmptySkill, Skill, SkillLevel } from '../../data';
+import { SettingsContext } from '../../settings';
+import { EditorLocale } from '../../locale';
 
 const SkillEditor = (props: ListRenderProps<Skill>) => {
+    const [settings] = useContext(SettingsContext);
+
     //prettier-ignore
     const [skill, setSkill] = useState<Skill>( () => props.initial ?? EmptySkill());
 
@@ -88,11 +92,16 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
                         })
                     }
                 >
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                    <option value="Proficient">Proficient</option>
-                    <option value="Expert">Expert</option>
+                    {/*prettier-ignore*/}
+                    <option value="Beginner">{EditorLocale[settings.language]['BEGINNER']}</option>
+                    {/*prettier-ignore*/}
+                    <option value="Intermediate">{EditorLocale[settings.language]['INTERMEDIATE']}</option>
+                    {/*prettier-ignore*/}
+                    <option value="Advanced">{EditorLocale[settings.language]['ADVANCED']}</option>
+                    {/*prettier-ignore*/}
+                    <option value="Proficient">{EditorLocale[settings.language]['PROFICIENT']}</option>
+                    {/*prettier-ignore*/}
+                    <option value="Expert">{EditorLocale[settings.language]['EXPERT']}</option>
                 </select>
             </div>
             <div className="my-2 flex gap-2">
@@ -101,7 +110,7 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
                     //prettier-ignore
                     onClick={()=>changeLogo((stringRef.current as HTMLTextAreaElement).value)}
                 >
-                    Upload
+                    {EditorLocale[settings.language]['UPLOAD']}
                 </button>
                 <textarea
                     ref={stringRef}
@@ -110,7 +119,7 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
                 />
             </div>
             {/*prettier-ignore*/}
-            <p className="text-xs text-gray-400"> You can get some logos at svgl.app </p>
+            <p className="text-xs text-gray-400">{EditorLocale[settings.language]['LOGOS']}</p>
         </div>
     );
 };
