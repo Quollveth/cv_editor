@@ -3,7 +3,16 @@ import { Course, EducationInfo, EmptyCourse, EmptyEducation } from '../data';
 import DynamicList, { ListRenderProps } from './list';
 
 const CourseEdit = (props: ListRenderProps<Course>) => {
-    const [course, setCourse] = useState<Course>(EmptyCourse());
+    const [course, setCourse] = useState(props.initial ?? EmptyCourse());
+
+    const getISODate = (date: Date) => {
+        return date instanceof Date && !isNaN(date.getTime())
+            ? date.toISOString().split('T')[0]
+            : '';
+    };
+
+    const initialStartDate = getISODate(course.start);
+    const initialEndDate = getISODate(course.end);
 
     useEffect(() => {
         props.onChange(course);
@@ -47,7 +56,7 @@ const CourseEdit = (props: ListRenderProps<Course>) => {
                     id="start"
                     type="date"
                     name="start"
-                    value={course.start.toISOString().split('T')[0]}
+                    value={initialStartDate}
                     onChange={handleChange}
                     className="input input-sm border border-gray-300 rounded px-2 py-1"
                 />
@@ -61,7 +70,7 @@ const CourseEdit = (props: ListRenderProps<Course>) => {
                     id="end"
                     type="date"
                     name="end"
-                    value={course.end.toISOString().split('T')[0]}
+                    value={initialEndDate}
                     onChange={handleChange}
                     className="input input-sm border border-gray-300 rounded px-2 py-1"
                 />
@@ -110,6 +119,7 @@ export default function EducationEdit(props: ListRenderProps<EducationInfo>) {
                     <input
                         className="border-1 border-gray-300 w-full"
                         type="text"
+                        value={data.name}
                         placeholder="Institution"
                         onInput={(e) =>
                             editData({
@@ -120,6 +130,7 @@ export default function EducationEdit(props: ListRenderProps<EducationInfo>) {
                 )}
                 emptyFactory={EmptyCourse}
                 onChange={CourseChanger}
+                starting={data.what}
                 render={(config: ListRenderProps<Course>) => (
                     <CourseEdit
                         initial={config.initial}
