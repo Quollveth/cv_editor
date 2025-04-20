@@ -59,7 +59,10 @@ const Panel = () => {
             </div>
 
             <div className="border-t pt-4">
-                <DropdownButton state={expandAi} setState={setExpandAi} />
+                <div className="flex items-center hover:text-blue-600">
+                    <DropdownButton state={expandAi} setState={setExpandAi} />
+                    <span>{PanelLocale[settings.language]['EXPAND']}</span>
+                </div>
 
                 {expandAi && (
                     <div className="mt-4 space-y-4">

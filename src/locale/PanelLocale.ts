@@ -9,7 +9,8 @@ type PanelLocaleKeys =
     | 'DEFAULT'
     | 'ENDPOINT'
     | 'MODEL'
-    | 'TOKEN';
+    | 'TOKEN'
+    | 'EXPAND';
 
 const PanelLocaleEN: Record<PanelLocaleKeys, string> = {
     SAVE: 'Save',
@@ -21,6 +22,7 @@ const PanelLocaleEN: Record<PanelLocaleKeys, string> = {
     ENDPOINT: 'Endpoint',
     MODEL: 'Model Name',
     TOKEN: 'API Key',
+    EXPAND: 'Show AI Settings',
 };
 const PanelLocalePT: Record<PanelLocaleKeys, string> = {
     SAVE: 'Salvar',
@@ -32,6 +34,7 @@ const PanelLocalePT: Record<PanelLocaleKeys, string> = {
     ENDPOINT: 'Endpoint',
     MODEL: 'Modelo',
     TOKEN: 'Chave API',
+    EXPAND: 'Configurações de IA',
 };
 
 export const PanelLocale: Record<Locale, Record<PanelLocaleKeys, string>> = {
