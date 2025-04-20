@@ -1,8 +1,8 @@
 import Swal from 'sweetalert2';
 import { CvInfo, LangLevel } from '../data';
-import { AiInfo, CvAiData } from './data';
+import { CvAiData } from './data';
 import { Locale, Settings } from '../settings';
-import { AILocale } from '../locale';
+import { AILocale, ErrorLocale } from '../locale';
 
 type Message = {
     role: 'error' | 'system' | 'user' | 'tool';
@@ -43,11 +43,16 @@ const GetSystemPrompts = (req: AiRequest, lang: Locale): Message[] => {
 
     switch (req) {
         case 'getKeywords':
-        case 'writeAbout':
             return prompts.concat({
                 role: 'system',
                 //prettier-ignore
                 content: AILocale[lang]['GET_KEYWORDS'],
+            });
+        case 'writeAbout':
+            return prompts.concat({
+                role: 'system',
+                //prettier-ignore
+                content: AILocale[lang]['WRITE_ABOUT'],
             });
 
         default:
@@ -111,9 +116,8 @@ const ApplyChanges = (
 };
 
 export async function PerformRequest(
-    agent: AiInfo,
-    data: CvInfo,
     settings: Settings,
+    data: CvInfo,
     action: AiRequest
 ): Promise<CvInfo> {
     const EncodeCvMessage = (info: CvInfo): Message => {
@@ -132,15 +136,17 @@ export async function PerformRequest(
 
     const messages = prompts.concat(initialCvState);
 
-    const response = await callLLM(agent, messages);
+    const response = await callLLM(settings, messages);
 
     return ApplyChanges(action, response, data);
 }
 
 export async function callLLM(
-    agent: AiInfo,
+    settings: Settings,
     messages: Message[]
 ): Promise<Message> {
+    const agent = settings.agent;
+
     const response = await fetch(agent.endpoint, {
         method: 'POST',
         headers: {
@@ -156,7 +162,7 @@ export async function callLLM(
     if (response.status !== 200) {
         const error = await response.json();
         ShowError(
-            'Error talking to endpoint',
+            ErrorLocale[settings.language]['STATUS'],
             `Status: ${response.status}\n${error.error.message}`
         );
         return ERROR_MESSAGE;
@@ -166,15 +172,15 @@ export async function callLLM(
     try {
         body = await response.json();
     } catch (e) {
-        ShowError('The endpoint produced an invalid response', `${e}`);
+        ShowError(ErrorLocale[settings.language]['INVALID_RESP'], `${e}`);
         return ERROR_MESSAGE;
     }
 
     const content = body.choices[0].message;
     if (!content.role || !content.content) {
         ShowError(
-            'The endpoint produced an invalid response',
-            "Fields 'role' and 'content' not present"
+            ErrorLocale[settings.language]['INVALID_RESP'],
+            ErrorLocale[settings.language]['INVALID_MESSAGE']
         );
         return ERROR_MESSAGE;
     }

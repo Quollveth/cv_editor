@@ -1,13 +1,16 @@
 import React from 'react';
+import { AiInfo, DefaultAi } from './ai/data';
 
 export type Locale = 'Portuguese' | 'English';
 export type Settings = {
     language: Locale;
+    agent: AiInfo;
 };
 
 export const DefaultSettings = (): Settings => {
     return {
         language: 'Portuguese',
+        agent: DefaultAi(),
     };
 };
 

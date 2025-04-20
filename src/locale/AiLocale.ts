@@ -11,7 +11,7 @@ type AILocaleKeys =
 const AILocalePT: Record<AILocaleKeys, string> = {
     BASE_PROMPT: 'Você é um assistente para otimizar o currículo do usuário\nVocê deve responder com apenas a informação solicitada para ser analisada automaticamente',
     RESPONSE_TYPE: 'Tipo de responsta esperada: ',
-    WRITE_ABOUT: 'Dada a information present no currículo, melhore a sessão "sobre" (about)',
+    WRITE_ABOUT: 'Dada a informação presente no currículo, escreva uma breve descrição sobre o usuário para a sessão "sobre"',
     GET_KEYWORDS: 'Dada a infomação presente no currículo, cria uma lista de keywords que reprensentem o conhecimento e habilidades do usuário',
     CV_STATE: 'Currículo Atual',
 };

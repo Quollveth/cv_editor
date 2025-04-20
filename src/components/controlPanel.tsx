@@ -1,27 +1,33 @@
 import { LoadCv, SaveCv } from '../helpers/saveLoad';
 import { useContext, useEffect, useState } from 'react';
 import { CVContext } from '../data';
-import { AIContext, AiInfo, DefaultAi } from '../ai/data';
+import { AiInfo, DefaultAi } from '../ai/data';
 import AiActions from './aiActionsPanel';
 import DropdownButton from './dropdownButton';
+import { SettingsContext } from '../settings';
 
 const Panel = () => {
     const [CvData, setCvData] = useContext(CVContext);
-    const [AiSettings, setAiSettings] = useContext(AIContext);
+    const [settings, setSettings] = useContext(SettingsContext);
     const [expandAi, setExpandAi] = useState(false);
 
-    const editAi = (data: Partial<AiInfo>) => {
-        setAiSettings({
-            ...AiSettings,
-            ...data,
+    const setAiSettings = (data: Partial<AiInfo>) => {
+        setSettings((prev) => {
+            return {
+                ...prev,
+                agent: {
+                    ...prev.agent,
+                    ...data,
+                },
+            };
         });
     };
 
     useEffect(() => {
-        if (AiSettings) {
-            localStorage.setItem('AiSettings', JSON.stringify(AiSettings));
+        if (settings) {
+            localStorage.setItem('settings', JSON.stringify(settings));
         }
-    }, [AiSettings]);
+    }, [settings]);
 
     return (
         <div className="p-6 bg-white rounded-lg space-y-6 max-w-full">
@@ -78,10 +84,10 @@ const Panel = () => {
                             <input
                                 id="endpoint"
                                 type="text"
-                                value={AiSettings.endpoint}
+                                value={settings.agent.endpoint}
                                 className="mt-1 w-full border border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 onInput={(e) =>
-                                    editAi({
+                                    setAiSettings({
                                         endpoint: (e.target as HTMLInputElement)
                                             .value,
                                     })
@@ -99,10 +105,10 @@ const Panel = () => {
                             <input
                                 id="model"
                                 type="text"
-                                value={AiSettings.model}
+                                value={settings.agent.model}
                                 className="mt-1 w-full border border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 onInput={(e) =>
-                                    editAi({
+                                    setAiSettings({
                                         model: (e.target as HTMLInputElement)
                                             .value,
                                     })
@@ -119,10 +125,10 @@ const Panel = () => {
                             </label>
                             <textarea
                                 id="token"
-                                value={AiSettings.token}
+                                value={settings.agent.token}
                                 className="mt-1 w-full border border-gray-600 rounded px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 onInput={(e) =>
-                                    editAi({
+                                    setAiSettings({
                                         token: (e.target as HTMLTextAreaElement)
                                             .value,
                                     })
