@@ -27,6 +27,19 @@ export function getSocialLogo(which: Social): (props: any) => JSX.Element {
 export function getSocialPrefix(which: Social): string {
     switch (which) {
         case 'email': return 'mailto:';
+        case 'github': return 'github.com/';
+        case 'linkedin': return 'linkedin.com/in/';
+        case 'instagram': return 'instagram.com/';
+        case 'bluesky': return 'bsky.app/profile/';
+        case 'whatsapp': return 'wa.me/';
+        default: return '';
+    }
+}
+
+// prettier-ignore
+export function getSocialUrl(which:Social):string{
+    switch (which) {
+        case 'email': return 'mailto:';
         case 'github': return 'https://github.com/';
         case 'linkedin': return 'https://linkedin.com/in/';
         case 'instagram': return 'https://instagram.com/';

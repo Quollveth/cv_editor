@@ -1,8 +1,12 @@
 import Swal from 'sweetalert2';
 
 //prettier-ignore
-import {ContactInfo, Course, CvInfo, EducationInfo, EmptyCv, SkillLevel, Social,} from '../data';
-import { getSocialLogo, getSocialPrefix } from '../components/logos/social';
+import {ContactInfo, Course, CvInfo, EducationInfo, EmptyCv, Skill, SkillLevel, Social,} from '../data';
+import {
+    getSocialLogo,
+    getSocialPrefix,
+    getSocialUrl,
+} from '../components/logos/social';
 import { ValidateCv } from '../zod';
 
 const ToCourseDate = (date: Date, yearOnly: boolean): string => {
@@ -54,7 +58,13 @@ function EncodeCv(info: CvInfo): CvInfoSave {
         name: info.name,
         about: info.about,
         birth: info.birth,
-        skills: [...info.skills],
+        skills: info.skills.map((s) => {
+            return {
+                name: s.name,
+                level: s.level,
+                logo: s.logo,
+            } as Skill;
+        }),
         contact: info.contact.map((c) => {
             return {
                 name: c.name,
@@ -102,8 +112,8 @@ function DecodeCv(info: CvInfoSave): CvInfo {
         cv.contact = info.contact.map((c) => {
             return {
                 name: c.name,
-                url: c.url,
                 which: c.which,
+                url: getSocialUrl(c.which),
                 prefix: getSocialPrefix(c.which),
                 logo: getSocialLogo(c.which),
             } as ContactInfo;
