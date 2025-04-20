@@ -91,6 +91,7 @@ function EncodeCv(info: CvInfo): CvInfoSave {
 
 function DecodeCv(info: CvInfoSave): CvInfo {
     const cv = EmptyCv();
+    cv.id = crypto.randomUUID();
 
     cv.name = info.name;
     cv.about = info.about;

@@ -29,7 +29,6 @@ const Editor = () => {
         },
         [setCvData]
     );
-
     const MainEducationChanger = useCallback(
         (data: EducationInfo[]) => {
             setCvData((prev) => {
@@ -38,7 +37,6 @@ const Editor = () => {
         },
         [setCvData]
     );
-
     const ExtraEducationChanger = useCallback(
         (data: EducationInfo[]) => {
             setCvData((prev) => {
@@ -47,7 +45,6 @@ const Editor = () => {
         },
         [setCvData]
     );
-
     const SkillChanger = useCallback(
         (data: Skill[]) => {
             setCvData((prev) => {
@@ -170,11 +167,11 @@ const Editor = () => {
     );
 };
 
-const App = () => {
-    const [CvData, setCvData] = useState(EmptyCv());
+const Panel = () => {
+    const [CvData, setCvData] = useContext(CVContext);
 
     return (
-        <StrictMode>
+        <div>
             <button
                 className="m-4 p-2 cursor-pointer border-2 border-amber-700"
                 onClick={() => {
@@ -187,7 +184,6 @@ const App = () => {
                 className="m-4 p-2 cursor-pointer border-2 border-amber-700"
                 onClick={async () => {
                     const cv = await LoadCv();
-                    console.log(cv);
                     setCvData(cv);
                 }}
             >
@@ -201,8 +197,18 @@ const App = () => {
             >
                 Print
             </button>
+        </div>
+    );
+};
+
+const App = () => {
+    const [CvData, setCvData] = useState(EmptyCv());
+
+    return (
+        <StrictMode>
             <CVContext.Provider value={[CvData, setCvData]}>
-                <Editor />
+                <Panel />
+                <Editor key={CvData.id} />
             </CVContext.Provider>
         </StrictMode>
     );

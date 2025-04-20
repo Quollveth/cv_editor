@@ -37,6 +37,7 @@ export interface Skill {
     level: SkillLevel;
 }
 export type CvInfo = {
+    id: string;
     name: string;
     birth: Date;
     about: string;
@@ -76,6 +77,7 @@ export const EmptySkill = (): Skill => {
 };
 export const EmptyCv = (): CvInfo => {
     return {
+        id: crypto.randomUUID(),
         name: '',
         birth: new Date(),
         about: '',

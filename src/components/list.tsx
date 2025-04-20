@@ -11,8 +11,7 @@ type ListReducerAction<T extends Object> =
     | { type: 'Add' }
     | { type: 'Remove'; idx: number }
     | { type: 'Sort'; data: ListItem<T>[] }
-    | { type: 'Edit'; idx: number; data: ListItem<T> }
-    | { type: 'Reset'; data: ListItem<T>[] };
+    | { type: 'Edit'; idx: number; data: ListItem<T> };
 
 function ListReducer<T extends Object>(
     factory: () => T,
@@ -30,8 +29,6 @@ function ListReducer<T extends Object>(
             return state.map((it, idx) =>
                 idx === action.idx ? action.data : it
             );
-        case 'Reset':
-            return action.data;
         default:
             const exhaustive: never = action;
             throw new Error(`Dumbass broke the reducer: ${exhaustive}`);
@@ -61,19 +58,30 @@ interface DynamicListProps<T> {
 }
 
 const DynamicList = <T extends Object>(props: DynamicListProps<T>) => {
-    const initial = (props.starting ?? []) as ListItem<T>[];
+    useEffect(() => {
+        console.log('list rendered');
+        console.log(props.starting);
+    }, []);
+
+    const initializer = () => {
+        const list = (props.starting ?? []).map((item) => ({
+            ...item,
+            id: crypto.randomUUID(),
+        }));
+        return list;
+    };
 
     const [items, dispatch] = useReducer(
         CreateListReducer<T>(props.emptyFactory),
-        initial
+        undefined,
+        initializer
     );
-
-    const [expand, setExpand] = useState(true);
 
     useEffect(() => {
         props.onChange(items);
     }, [items]);
 
+    const [expand, setExpand] = useState(true);
     return (
         <div className="p-4 flex flex-1 flex-col mx-auto border-1 border-gray-600 rounded transition my-2">
             <div className="flex gap-2 items-center justify-between mb-4">
