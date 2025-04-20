@@ -10,7 +10,11 @@ import {
 import { ValidateCv } from '../zod';
 
 const ToCourseDate = (date: Date, yearOnly: boolean): string => {
-    return `${yearOnly ? '' : date.getMonth() + '/'}${date.getFullYear()}`;
+    if (yearOnly) {
+        return `${date.getFullYear()}`;
+    } else {
+        return `${date.getMonth() + 1}/${date.getFullYear()}`;
+    }
 };
 const FromCourseDate = (dateStr: string): Date => {
     const parts = dateStr.split('/');
@@ -25,7 +29,6 @@ const FromCourseDate = (dateStr: string): Date => {
 
 type ContactSave = {
     name: string;
-    url: string;
     which: Social;
 };
 type CourseSave = {
@@ -54,6 +57,14 @@ export type CvInfoSave = {
 };
 
 function EncodeCv(info: CvInfo): CvInfoSave {
+    const courseMapper = (c: Course) => {
+        return {
+            name: c.name,
+            start: ToCourseDate(c.start, c.yearOnly ?? false),
+            end: ToCourseDate(c.end, c.yearOnly ?? false),
+        } as CourseSave;
+    };
+
     return {
         name: info.name,
         about: info.about,
@@ -68,32 +79,19 @@ function EncodeCv(info: CvInfo): CvInfoSave {
         contact: info.contact.map((c) => {
             return {
                 name: c.name,
-                url: c.url,
                 which: c.which,
             } as ContactSave;
         }),
         eduMain: info.eduMain.map((e) => {
             return {
                 name: e.name,
-                what: e.what.map((c) => {
-                    return {
-                        name: c.name,
-                        start: ToCourseDate(c.start, c.yearOnly ?? false),
-                        end: ToCourseDate(c.end, c.yearOnly ?? false),
-                    } as CourseSave;
-                }),
+                what: e.what.map(courseMapper),
             } as EducationSave;
         }),
         eduExtra: info.eduExtra.map((e) => {
             return {
                 name: e.name,
-                what: e.what.map((c) => {
-                    return {
-                        name: c.name,
-                        start: ToCourseDate(c.start, c.yearOnly ?? false),
-                        end: ToCourseDate(c.end, c.yearOnly ?? false),
-                    } as CourseSave;
-                }),
+                what: e.what.map(courseMapper),
             } as EducationSave;
         }),
     };
@@ -146,7 +144,7 @@ function DecodeCv(info: CvInfoSave): CvInfo {
         });
     }
     if (info.eduExtra.length !== 0) {
-        cv.eduMain = info.eduExtra.map((e) => {
+        cv.eduExtra = info.eduExtra.map((e) => {
             return {
                 id: crypto.randomUUID(),
                 name: e.name,

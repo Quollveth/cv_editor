@@ -25,33 +25,42 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
     const changeLogo = (svgString: string) => {
         if (!logoRef.current) return;
 
-        const sanitized = DOMPurify.sanitize(svgString, {
-            USE_PROFILES: { svg: true },
-        });
+        try {
+            const sanitized = DOMPurify.sanitize(svgString, {
+                USE_PROFILES: { svg: true },
+            });
 
-        const doc = new DOMParser().parseFromString(sanitized, 'image/svg+xml');
-        const svg = doc.querySelector('svg');
-        if (!svg) return;
+            const doc = new DOMParser().parseFromString(
+                sanitized,
+                'image/svg+xml'
+            );
+            const svg = doc.querySelector('svg');
+            if (!svg) return;
 
-        svg.setAttribute('width', '2.5em');
-        svg.setAttribute('height', '2.5em');
+            svg.setAttribute('width', '2.5em');
+            svg.setAttribute('height', '2.5em');
 
-        const updatedSvgString = new XMLSerializer().serializeToString(svg);
+            const updatedSvgString = new XMLSerializer().serializeToString(svg);
 
-        if (logoRef.current) {
             logoRef.current.innerHTML = updatedSvgString;
+            editSkill({ logo: btoa(updatedSvgString) });
+        } catch (error) {
+            console.error('Failed to update logo SVG:', error);
+            alert('Invalid SVG input. Please double-check the format.');
         }
-
-        editSkill({ logo: btoa(updatedSvgString) });
     };
 
     useEffect(() => {
-        if (props.initial.logo === '') {
+        if (!props.initial.logo || props.initial.logo === '') {
             return;
         }
 
-        const decoded = atob(props.initial.logo!);
-        changeLogo(decoded);
+        try {
+            const decoded = atob(props.initial.logo!);
+            changeLogo(decoded);
+        } catch (e) {
+            console.warn('Invalid base64 logo string:', e);
+        }
     }, []);
 
     return (

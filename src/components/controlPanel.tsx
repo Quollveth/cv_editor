@@ -33,6 +33,12 @@ const Panel = () => {
                     Save
                 </button>
                 <button
+                    onClick={() => console.log(CvData)}
+                    className="px-4 py-2 bg-amber-400 text-white rounded hover:bg-amber-500 transition"
+                >
+                    Print
+                </button>
+                <button
                     onClick={async () => {
                         const cv = await LoadCv();
                         setCvData(cv);

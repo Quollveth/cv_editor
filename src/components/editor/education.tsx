@@ -18,13 +18,18 @@ const CourseEdit = (props: ListRenderProps<Course>) => {
         props.onChange(course);
     }, [course]);
 
+    function parseDateFromInput(value: string): Date {
+        const [year, month, day] = value.split('-').map(Number);
+        return new Date(year, month - 1, day);
+    }
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const field = e.target.name;
 
         let value: string | Date | boolean;
 
         if (field === 'start' || field === 'end') {
-            value = new Date(e.target.value as string);
+            value = parseDateFromInput(e.target.value);
         } else if (field === 'yearOnly') {
             value = e.target.checked;
         } else {

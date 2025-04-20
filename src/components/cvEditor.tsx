@@ -37,7 +37,7 @@ const Editor = () => {
     const ExtraEducationChanger = useCallback(
         (data: EducationInfo[]) => {
             setCvData((prev) => {
-                return { ...prev, eduMain: data };
+                return { ...prev, eduExtra: data };
             });
         },
         [setCvData]

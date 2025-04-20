@@ -21,8 +21,8 @@ const ContactOptions: ContactInfo[] = [
     {
         name: '',
         which: 'linkedin',
-        url: Logo.getSocialUrl('bluesky'),
-        prefix: Logo.getSocialPrefix('bluesky'),
+        url: Logo.getSocialUrl('linkedin'),
+        prefix: Logo.getSocialPrefix('linkedin'),
         logo: Logo.LinkedIn,
     },
     {
