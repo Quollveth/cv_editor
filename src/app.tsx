@@ -7,9 +7,11 @@ import { CVContext, EmptyCv } from './data';
 import { AIContext, EmptyAi } from './ai/data';
 import Panel from './components/controlPanel';
 import Editor from './components/cvEditor';
+import { DefaultSettings, SettingsContext } from './settings';
 
 const App = () => {
     const [CvData, setCvData] = useState(EmptyCv());
+    const [settings, setSettings] = useState(DefaultSettings());
 
     const [AiSettings, setAiSettings] = useState(() => {
         const saved = localStorage.getItem('AiSettings');
@@ -30,16 +32,18 @@ const App = () => {
 
     return (
         <StrictMode>
-            <CVContext.Provider value={[CvData, setCvData]}>
-                <AIContext.Provider value={[AiSettings, setAiSettings]}>
-                    <div className="border-1 border-gray-500 m-2 shadow-md rounded">
-                        <Panel key={AiSettings.id} />
-                    </div>
-                    <div className="border-1 border-gray-500 m-2 shadow-md rounded">
-                        <Editor key={CvData.id} />
-                    </div>
-                </AIContext.Provider>
-            </CVContext.Provider>
+            <SettingsContext.Provider value={[settings, setSettings]}>
+                <CVContext.Provider value={[CvData, setCvData]}>
+                    <AIContext.Provider value={[AiSettings, setAiSettings]}>
+                        <div className="border-1 border-gray-500 m-2 shadow-md rounded">
+                            <Panel key={AiSettings.id} />
+                        </div>
+                        <div className="border-1 border-gray-500 m-2 shadow-md rounded">
+                            <Editor key={CvData.id} />
+                        </div>
+                    </AIContext.Provider>
+                </CVContext.Provider>
+            </SettingsContext.Provider>
         </StrictMode>
     );
 };

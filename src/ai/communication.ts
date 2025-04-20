@@ -1,6 +1,8 @@
 import Swal from 'sweetalert2';
-import { CvInfo, LangLevel, SkillLevel } from '../data';
+import { CvInfo, LangLevel } from '../data';
 import { AiInfo, CvAiData } from './data';
+import { Locale, Settings } from '../settings';
+import { AILocale } from '../locale';
 
 type Message = {
     role: 'error' | 'system' | 'user' | 'tool';
@@ -24,33 +26,28 @@ export const ShowError = (error: string, text: string) => {
 export type AiRequest = 'writeAbout' | 'getKeywords';
 
 const ResponseType: Record<AiRequest, string> = {
-    writeAbout: 'plaint text',
-    getKeywords: 'string array',
+    writeAbout: 'plain text',
+    getKeywords: 'string array, comma separated',
 } as const;
 
-const GetSystemPrompts = (req: AiRequest): Message[] => {
+const GetSystemPrompts = (req: AiRequest, lang: Locale): Message[] => {
     //prettier-ignore
     const prompts: Message[] = [{
         role: 'system',
-        content: "You are an assistant helping optmize the user's CV\nYou must respond to requests with only the requested data and no additional information so it may be parsed",
+        content: AILocale[lang]['BASE_PROMPT'],
     },
     {
 	    role: 'system',
-		content: `Expected response type: ${ResponseType[req]}`,
+		content: `${AILocale[lang]['RESPONSE_TYPE']}: ${ResponseType[req]}`,
 	}];
 
     switch (req) {
         case 'getKeywords':
-            return prompts.concat({
-                role: 'system',
-                //prettier-ignore
-                content: "Given the information currently present on the CV, create a list of keywords that best represent the user's knowledge and skills",
-            });
         case 'writeAbout':
             return prompts.concat({
                 role: 'system',
                 //prettier-ignore
-                content: 'Given the information currently present on the CV, improve the "about" section',
+                content: AILocale[lang]['GET_KEYWORDS'],
             });
 
         default:
@@ -59,7 +56,7 @@ const GetSystemPrompts = (req: AiRequest): Message[] => {
     }
 };
 
-export const EncodeAiCv = (info: CvInfo): CvAiData => {
+const EncodeAiCv = (info: CvInfo): CvAiData => {
     return {
         about: info.about,
         keywords: [...info.keywords],
@@ -94,21 +91,41 @@ export const EncodeAiCv = (info: CvInfo): CvAiData => {
     };
 };
 
-export const EncodeCvMessage = (info: CvInfo, tool?: boolean): Message => {
-    const encoded = JSON.stringify(EncodeAiCv(info), null, 2);
+const ApplyChanges = (
+    request: AiRequest,
+    response: Message,
+    starting: CvInfo
+): CvInfo => {
+    const ret: CvInfo = { ...starting };
 
-    return {
-        role: tool ? 'tool' : 'system',
-        content: `Current CV state:\n${encoded}`,
-    };
+    switch (request) {
+        case 'writeAbout':
+            return { ...ret, about: response.content };
+        case 'getKeywords':
+            return { ...ret, keywords: response.content.split(',') };
+
+        default:
+            const exhaustive: never = request;
+            throw new Error(`Invalid AI request: ${exhaustive}`);
+    }
 };
 
 export async function PerformRequest(
     agent: AiInfo,
     data: CvInfo,
+    settings: Settings,
     action: AiRequest
 ): Promise<CvInfo> {
-    const prompts = GetSystemPrompts(action);
+    const EncodeCvMessage = (info: CvInfo): Message => {
+        const encoded = JSON.stringify(EncodeAiCv(info), null, 2);
+
+        return {
+            role: 'system',
+            content: `${AILocale[settings.language]['CV_STATE']}:\n${encoded}`,
+        };
+    };
+
+    const prompts = GetSystemPrompts(action, settings.language);
 
     let mutableCv = { ...data };
     const initialCvState = EncodeCvMessage(mutableCv);
@@ -117,7 +134,7 @@ export async function PerformRequest(
 
     const response = await callLLM(agent, messages);
 
-    console.log(response);
+    return ApplyChanges(action, response, data);
 }
 
 export async function callLLM(

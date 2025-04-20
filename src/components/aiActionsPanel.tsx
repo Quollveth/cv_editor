@@ -3,6 +3,7 @@ import { AIContext } from '../ai/data';
 import { CVContext } from '../data';
 import DropdownButton from './dropdownButton';
 import { AiRequest, PerformRequest } from '../ai/communication';
+import { SettingsContext } from '../settings';
 
 const StyledButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = (
     props
@@ -11,13 +12,16 @@ const StyledButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = (
 };
 
 const AiActions = () => {
-    const [CvData] = useContext(CVContext);
+    const [CvData, setCvData] = useContext(CVContext);
     const [AiSettings] = useContext(AIContext);
+    const [Settings] = useContext(SettingsContext);
 
     const [expand, setExpand] = useState(false);
 
-    const askAI = (action: AiRequest) => {
-        PerformRequest(AiSettings, CvData, action);
+    const askAI = async (action: AiRequest) => {
+        const resp = await PerformRequest(AiSettings, CvData, Settings, action);
+        console.log(resp);
+        setCvData(resp);
     };
 
     return (
