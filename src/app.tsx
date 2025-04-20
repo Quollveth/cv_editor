@@ -5,8 +5,8 @@ import '@/assets/main.css';
 
 import { CVContext, EmptyCv } from './data';
 import { AIContext, EmptyAi } from './ai/data';
-import Panel from './controlPanel';
-import Editor from './cvEditor';
+import Panel from './components/controlPanel';
+import Editor from './components/cvEditor';
 
 const App = () => {
     const [CvData, setCvData] = useState(EmptyCv());

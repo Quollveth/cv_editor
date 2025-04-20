@@ -39,16 +39,19 @@ export const AIContext = React.createContext<AiContextType>([
 
 export type CvAiData = {
     skills: {
+        id: string;
         name: string;
         level: SkillLevel;
     }[];
     eduMain: {
+        id: string;
         intitution: string;
-        courses: [];
+        courses: { name: string; id: string }[];
     }[];
     eduExtra: {
+        id: string;
         institution: string;
-        courses: [];
+        courses: { name: string; id: string }[];
     }[];
     about: string;
     keywords: string[];

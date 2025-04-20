@@ -8,12 +8,12 @@ import {
     EmptyEducation,
     EmptySkill,
     Skill,
-} from './data';
+} from '../data';
 
-import ContactEdit from './components/contact';
-import DynamicList, { ListRenderProps } from './components/list';
-import EducationEdit from './components/education';
-import SkillEditor from './components/skill';
+import DynamicList, { ListRenderProps } from './list';
+import ContactEdit from './editor/contact';
+import SkillEditor from './editor/skill';
+import EducationEdit from './editor/education';
 
 const Editor = () => {
     const [cvData, setCvData] = useContext(CVContext);

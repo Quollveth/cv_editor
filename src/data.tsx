@@ -17,12 +17,14 @@ export interface ContactInfo {
     logo: (props: any) => JSX.Element;
 }
 export interface Course {
+    id: string;
     name: string;
     start: Date;
     end: Date;
     yearOnly?: boolean;
 }
 export interface EducationInfo {
+    id: string;
     name: string;
     what: Course[];
 }
@@ -32,6 +34,7 @@ export type SkillLevel =
     | 'Advanced'
     | 'Proficient';
 export interface Skill {
+    id: string;
     name: string;
     logo?: string;
     level: SkillLevel;
@@ -59,6 +62,7 @@ export const EmptyContact = (): ContactInfo => {
 };
 export const EmptyCourse = (): Course => {
     return {
+        id: crypto.randomUUID(),
         name: '',
         start: new Date(),
         end: new Date(),
@@ -66,12 +70,14 @@ export const EmptyCourse = (): Course => {
 };
 export const EmptyEducation = (): EducationInfo => {
     return {
+        id: crypto.randomUUID(),
         name: '',
         what: [],
     };
 };
 export const EmptySkill = (): Skill => {
     return {
+        id: crypto.randomUUID(),
         name: '',
         level: 'Beginner',
     };

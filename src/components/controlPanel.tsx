@@ -1,9 +1,9 @@
-import { LoadCv, SaveCv } from './helpers/saveLoad';
-import { DropdownSymbol } from './components/svg';
+import { LoadCv, SaveCv } from '../helpers/saveLoad';
 import { useContext, useEffect, useState } from 'react';
-import { CVContext } from './data';
-import { AIContext, AiInfo, DefaultAi } from './ai/data';
-import { AskAi } from './ai/communication';
+import { CVContext } from '../data';
+import { AIContext, AiInfo, DefaultAi } from '../ai/data';
+import AiActions from './aiActionsPanel';
+import DropdownButton from './dropdownButton';
 
 const Panel = () => {
     const [CvData, setCvData] = useContext(CVContext);
@@ -25,7 +25,7 @@ const Panel = () => {
 
     return (
         <div className="p-6 bg-white rounded-lg space-y-6 max-w-full">
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 items-end">
                 <button
                     onClick={() => SaveCv(CvData)}
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
@@ -41,32 +41,15 @@ const Panel = () => {
                 >
                     Load
                 </button>
-                <button
-                    onClick={async () => {
-                        AskAi(AiSettings);
-                    }}
-                    className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
-                >
-                    AI Optmize
-                </button>
+
+                <div>
+                    <span>AI Actions</span>
+                    <AiActions />
+                </div>
             </div>
 
             <div className="border-t pt-4">
-                <button
-                    onClick={() => setExpandAi(!expandAi)}
-                    className="flex items-center space-x-2 text-sm hover:text-blue-500 hover:underline focus:outline-none"
-                >
-                    <div
-                        className={`transform transition-transform duration-200 hover:text-blue-700 ${
-                            expandAi ? 'rotate-180' : 'rotate-0'
-                        }`}
-                    >
-                        <DropdownSymbol />
-                    </div>
-                    <span>
-                        {expandAi ? 'Hide AI Settings' : 'Show AI Settings'}
-                    </span>
-                </button>
+                <DropdownButton state={expandAi} setState={setExpandAi} />
 
                 {expandAi && (
                     <div className="mt-4 space-y-4">

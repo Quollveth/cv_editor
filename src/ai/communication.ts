@@ -1,5 +1,5 @@
 import Swal from 'sweetalert2';
-import { AiInfo } from './data';
+import { AiInfo, CvAiData } from './data';
 import { z } from 'zod';
 
 const ErrorToastTime = 3000;
@@ -15,6 +15,10 @@ const ModelResponseSchema = z.object({
 });
 
 export type Message = { role: 'system' | 'user'; content: string };
+
+export type AiRequests =
+    | { type: 'About'; data: CvAiData }
+    | { type: 'GetKeywords'; data: CvAiData };
 
 const SystemPrompts: Message[] = [
     {

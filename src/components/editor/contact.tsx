@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ContactInfo } from '../data';
-import * as Logo from './logos/social';
+import { ContactInfo } from '../../data';
+import * as Logo from '../logos/social';
 import Select, { OptionProps, SingleValueProps } from 'react-select';
 
 const ContactOptions: ContactInfo[] = [

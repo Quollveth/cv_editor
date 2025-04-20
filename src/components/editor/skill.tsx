@@ -1,8 +1,8 @@
 import DOMPurify from 'dompurify';
 
 import { useEffect, useRef, useState } from 'react';
-import { ListRenderProps } from './list';
-import { EmptySkill, Skill, SkillLevel } from '../data';
+import { ListRenderProps } from '../list';
+import { EmptySkill, Skill, SkillLevel } from '../../data';
 
 const SkillEditor = (props: ListRenderProps<Skill>) => {
     //prettier-ignore

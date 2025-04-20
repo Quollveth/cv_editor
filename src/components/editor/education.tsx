@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Course, EducationInfo, EmptyCourse, EmptyEducation } from '../data';
-import DynamicList, { ListRenderProps } from './list';
+import { Course, EducationInfo, EmptyCourse, EmptyEducation } from '../../data';
+import DynamicList, { ListRenderProps } from '../list';
 
 const CourseEdit = (props: ListRenderProps<Course>) => {
     const [course, setCourse] = useState(props.initial ?? EmptyCourse());

@@ -1,6 +1,7 @@
 import { JSX, useEffect, useReducer, useState } from 'react';
-import { AddSymbol, DropdownSymbol, RemoveSymbol } from './svg';
+import { AddSymbol, RemoveSymbol } from './svg';
 import { ReactSortable } from 'react-sortablejs';
+import DropdownButton from './dropdownButton';
 
 // ReactSortable type definitions only allows objects with an 'id' field
 export type ListItem<T extends Object> = T & {
@@ -82,15 +83,7 @@ const DynamicList = <T extends Object>(props: DynamicListProps<T>) => {
             <div className="flex gap-2 items-center justify-between mb-4">
                 <span className="flex-1">{props.title()}</span>
                 <div className="flex gap-2">
-                    <button onClick={() => setExpand(!expand)}>
-                        <div
-                            className={`transform transition-transform duration-200 hover:text-blue-700 ${
-                                expand ? 'rotate-0' : 'rotate-180'
-                            }`}
-                        >
-                            <DropdownSymbol />
-                        </div>
-                    </button>
+                    <DropdownButton state={expand} setState={setExpand} />
                     <button
                         className="flex items-center gap-4 border-1 border-gray-400 p-1 px-2 rounded"
                         onClick={() => dispatch({ type: 'Add' })}
