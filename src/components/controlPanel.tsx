@@ -10,7 +10,7 @@ import { PanelLocale } from '../locale';
 const Panel = () => {
     const [CvData, setCvData] = useContext(CVContext);
     const [settings, setSettings] = useContext(SettingsContext);
-    const [expandAi, setExpandAi] = useState(false);
+    const [expandSettings, setExpandSettings] = useState(false);
 
     const setAiSettings = (data: Partial<AiInfo>) => {
         setSettings((prev) => {
@@ -31,8 +31,8 @@ const Panel = () => {
     }, [settings]);
 
     return (
-        <div className="p-6 bg-white rounded-lg space-y-6 max-w-full">
-            <div className="flex space-x-4 items-end">
+        <div className="px-6 py-2 w-full flex flex-col">
+            <div className="flex gap-2 items-start">
                 <button
                     onClick={() => SaveCv(CvData)}
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
@@ -51,20 +51,22 @@ const Panel = () => {
                 >
                     {PanelLocale[settings.language]['LOAD']}
                 </button>
-
-                <div>
-                    <span>{PanelLocale[settings.language]['ACTIONS']}</span>
-                    <AiActions />
-                </div>
             </div>
-
-            <div className="border-t pt-4">
-                <div className="flex items-center hover:text-blue-600">
-                    <DropdownButton state={expandAi} setState={setExpandAi} />
+            <div className="flex gap-2 items-center">
+                <div className="px-4 py-2 rounded transition w-fit flex items-center">
                     <span>{PanelLocale[settings.language]['EXPAND']}</span>
+                    <div>
+                        <DropdownButton
+                            state={expandSettings}
+                            setState={setExpandSettings}
+                        />
+                    </div>
                 </div>
-
-                {expandAi && (
+                <div className="flex-1" />
+                <AiActions />
+            </div>
+            <div>
+                {expandSettings && (
                     <div className="mt-4 space-y-4">
                         <button
                             onClick={() => setAiSettings(DefaultAi())}

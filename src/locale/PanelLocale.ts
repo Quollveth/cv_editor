@@ -22,7 +22,7 @@ const PanelLocaleEN: Record<PanelLocaleKeys, string> = {
     ENDPOINT: 'Endpoint',
     MODEL: 'Model Name',
     TOKEN: 'API Key',
-    EXPAND: 'Show AI Settings',
+    EXPAND: 'Settings',
 };
 const PanelLocalePT: Record<PanelLocaleKeys, string> = {
     SAVE: 'Salvar',
@@ -34,7 +34,7 @@ const PanelLocalePT: Record<PanelLocaleKeys, string> = {
     ENDPOINT: 'Endpoint',
     MODEL: 'Modelo',
     TOKEN: 'Chave API',
-    EXPAND: 'Configurações de IA',
+    EXPAND: 'Configurações',
 };
 
 export const PanelLocale: Record<Locale, Record<PanelLocaleKeys, string>> = {

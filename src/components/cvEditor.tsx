@@ -140,7 +140,10 @@ const Editor = () => {
                             const data = (e.target as HTMLInputElement).value;
 
                             setCvData((prev) => {
-                                return { ...prev, keywords: data.split(',') };
+                                return {
+                                    ...prev,
+                                    keywords: data.split(','),
+                                };
                             });
                         }}
                     />
