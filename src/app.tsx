@@ -32,8 +32,12 @@ const App = () => {
         <StrictMode>
             <CVContext.Provider value={[CvData, setCvData]}>
                 <AIContext.Provider value={[AiSettings, setAiSettings]}>
-                    <Panel key={AiSettings.id} />
-                    <Editor key={CvData.id} />
+                    <div className="border-1 border-gray-500 m-2 shadow-md rounded">
+                        <Panel key={AiSettings.id} />
+                    </div>
+                    <div className="border-1 border-gray-500 m-2 shadow-md rounded">
+                        <Editor key={CvData.id} />
+                    </div>
                 </AIContext.Provider>
             </CVContext.Provider>
         </StrictMode>

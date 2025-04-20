@@ -7,7 +7,7 @@ import { AIContext, AiInfo, DefaultAi } from './ai/data';
 const Panel = () => {
     const [CvData, setCvData] = useContext(CVContext);
     const [AiSettings, setAiSettings] = useContext(AIContext);
-    const [expandAi, setExpandAi] = useState(true);
+    const [expandAi, setExpandAi] = useState(false);
 
     const editAi = (data: Partial<AiInfo>) => {
         setAiSettings({
@@ -49,7 +49,7 @@ const Panel = () => {
                 >
                     <div
                         className={`transform transition-transform duration-200 hover:text-blue-700 ${
-                            expandAi ? 'rotate-0' : 'rotate-180'
+                            expandAi ? 'rotate-180' : 'rotate-0'
                         }`}
                     >
                         <DropdownSymbol />
