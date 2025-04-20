@@ -5,6 +5,7 @@ import { AiInfo, DefaultAi } from '../ai/data';
 import AiActions from './aiActionsPanel';
 import DropdownButton from './dropdownButton';
 import { SettingsContext } from '../settings';
+import { PanelLocale } from '../locale';
 
 const Panel = () => {
     const [CvData, setCvData] = useContext(CVContext);
@@ -36,13 +37,7 @@ const Panel = () => {
                     onClick={() => SaveCv(CvData)}
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
                 >
-                    Save
-                </button>
-                <button
-                    onClick={() => console.log(CvData)}
-                    className="px-4 py-2 bg-amber-400 text-white rounded hover:bg-amber-500 transition"
-                >
-                    Print
+                    {PanelLocale[settings.language]['SAVE']}
                 </button>
                 <button
                     onClick={async () => {
@@ -54,11 +49,11 @@ const Panel = () => {
                     }}
                     className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
                 >
-                    Load
+                    {PanelLocale[settings.language]['LOAD']}
                 </button>
 
                 <div>
-                    <span>AI Actions</span>
+                    <span>{PanelLocale[settings.language]['ACTIONS']}</span>
                     <AiActions />
                 </div>
             </div>
@@ -72,14 +67,14 @@ const Panel = () => {
                             onClick={() => setAiSettings(DefaultAi())}
                             className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition"
                         >
-                            Use Default
+                            {PanelLocale[settings.language]['DEFAULT']}
                         </button>
                         <div>
                             <label
                                 htmlFor="endpoint"
                                 className="block text-sm font-medium text-gray-700"
                             >
-                                Endpoint
+                                {PanelLocale[settings.language]['ENDPOINT']}
                             </label>
                             <input
                                 id="endpoint"
@@ -100,7 +95,7 @@ const Panel = () => {
                                 htmlFor="model"
                                 className="block text-sm font-medium text-gray-700"
                             >
-                                Model Name
+                                {PanelLocale[settings.language]['MODEL']}
                             </label>
                             <input
                                 id="model"
@@ -121,7 +116,7 @@ const Panel = () => {
                                 htmlFor="token"
                                 className="block text-sm font-medium text-gray-700"
                             >
-                                API Key
+                                {PanelLocale[settings.language]['TOKEN']}
                             </label>
                             <textarea
                                 id="token"

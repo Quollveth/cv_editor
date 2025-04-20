@@ -3,6 +3,7 @@ import { CVContext } from '../data';
 import DropdownButton from './dropdownButton';
 import { AiRequest, PerformRequest } from '../ai/communication';
 import { SettingsContext } from '../settings';
+import { PanelLocale } from '../locale';
 
 const StyledButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = (
     props
@@ -31,10 +32,10 @@ const AiActions = () => {
             {expand && (
                 <>
                     <StyledButton onClick={() => askAI('getKeywords')}>
-                        Get Keywords
+                        {PanelLocale[Settings.language]['KEYWORDS']}
                     </StyledButton>
                     <StyledButton onClick={() => askAI('writeAbout')}>
-                        Write About Section
+                        {PanelLocale[Settings.language]['ABOUT']}
                     </StyledButton>
                 </>
             )}
