@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 
 //prettier-ignore
-import {ContactInfo, Course, CvInfo, EducationInfo, EmptyCv, Skill, SkillLevel, Social,} from '../data';
+import {ContactInfo, Course, CvInfo, EducationInfo, EmptyCv, SkillLevel, Social,} from '../data';
 import { getSocialLogo, getSocialPrefix } from '../components/logos/social';
 import { ValidateCv } from '../zod';
 
@@ -95,6 +95,7 @@ function DecodeCv(info: CvInfoSave): CvInfo {
     cv.name = info.name;
     cv.about = info.about;
     cv.birth = new Date(info.birth);
+    cv.skills = [...info.skills];
 
     if (info.contact.length !== 0) {
         cv.contact = info.contact.map((c) => {
@@ -105,16 +106,6 @@ function DecodeCv(info: CvInfoSave): CvInfo {
                 prefix: getSocialPrefix(c.which),
                 logo: getSocialLogo(c.which),
             } as ContactInfo;
-        });
-    }
-    if (info.skills.length !== 0) {
-        cv.skills = info.skills.map((s) => {
-            return {
-                name: s.name,
-                level: s.level,
-                //FIX: wtf
-                //logo: s.logo ? atob(s.logo) : '',
-            } as Skill;
         });
     }
     if (info.eduMain.length !== 0) {
@@ -180,7 +171,6 @@ export const LoadCv = async (): Promise<CvInfo> => {
             title: 'Invalid JSON',
             text: 'Your file sucks ass, use a good one next time dumbass.',
             icon: 'error',
-            theme: 'dark',
         });
     };
 
@@ -198,16 +188,13 @@ export const LoadCv = async (): Promise<CvInfo> => {
             reader.onload = async () => {
                 try {
                     const jason = JSON.parse(reader.result as string);
-                    console.log(jason);
-                    /*
+
                     if (!ValidateCv(jason)) {
-                        showError();
+                        showError('zod validator failed');
                         reject();
                         return;
                     }
-*/
                     const decoded = DecodeCv(jason);
-
                     resolve(decoded); // <---------------------------- return is here
                 } catch (e: any) {
                     showError(e);
