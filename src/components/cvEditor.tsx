@@ -6,7 +6,9 @@ import {
     EducationInfo,
     EmptyContact,
     EmptyEducation,
+    EmptyLanguage,
     EmptySkill,
+    Language,
     Skill,
 } from '../data';
 
@@ -14,6 +16,7 @@ import DynamicList, { ListRenderProps } from './list';
 import ContactEdit from './editor/contact';
 import SkillEditor from './editor/skill';
 import EducationEdit from './editor/education';
+import LanguageEditor from './editor/language';
 
 const Editor = () => {
     const [cvData, setCvData] = useContext(CVContext);
@@ -46,6 +49,14 @@ const Editor = () => {
         (data: Skill[]) => {
             setCvData((prev) => {
                 return { ...prev, skills: data };
+            });
+        },
+        [setCvData]
+    );
+    const LanguageChanger = useCallback(
+        (data: Language[]) => {
+            setCvData((prev) => {
+                return { ...prev, languages: data };
             });
         },
         [setCvData]
@@ -130,6 +141,18 @@ const Editor = () => {
                     starting={cvData.skills}
                     render={(config: ListRenderProps<Skill>) => (
                         <SkillEditor
+                            initial={config.initial}
+                            onChange={config.onChange}
+                        />
+                    )}
+                />
+                <DynamicList<Language>
+                    title={() => <p>Languages</p>}
+                    emptyFactory={EmptyLanguage}
+                    onChange={LanguageChanger}
+                    starting={cvData.languages}
+                    render={(config: ListRenderProps<Language>) => (
+                        <LanguageEditor
                             initial={config.initial}
                             onChange={config.onChange}
                         />

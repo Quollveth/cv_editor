@@ -92,6 +92,7 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
                     <option value="Intermediate">Intermediate</option>
                     <option value="Advanced">Advanced</option>
                     <option value="Proficient">Proficient</option>
+                    <option value="Expert">Expert</option>
                 </select>
             </div>
             <div className="my-2 flex gap-2">

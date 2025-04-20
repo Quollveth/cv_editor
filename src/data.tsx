@@ -32,6 +32,7 @@ export type SkillLevel =
     | 'Beginner'
     | 'Intermediate'
     | 'Advanced'
+    | 'Expert'
     | 'Proficient';
 export interface Skill {
     id: string;
@@ -39,11 +40,17 @@ export interface Skill {
     logo?: string;
     level: SkillLevel;
 }
+export interface Language {
+    id: string;
+    name: string;
+    level: SkillLevel;
+}
 export type CvInfo = {
     id: string;
     name: string;
     about: string;
     birth: Date;
+    languages: Language[];
     keywords: string[];
     contact: ContactInfo[];
     eduMain: EducationInfo[];
@@ -82,11 +89,19 @@ export const EmptySkill = (): Skill => {
         level: 'Beginner',
     };
 };
+export const EmptyLanguage = (): Language => {
+    return {
+        id: crypto.randomUUID(),
+        name: '',
+        level: 'Beginner',
+    };
+};
 export const EmptyCv = (): CvInfo => {
     return {
         id: crypto.randomUUID(),
         name: '',
         about: '',
+        languages: [],
         keywords: [],
         birth: new Date(),
         contact: [],

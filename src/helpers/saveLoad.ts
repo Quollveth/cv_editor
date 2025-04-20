@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 
 //prettier-ignore
-import {ContactInfo, Course, CvInfo, EducationInfo, EmptyCv, Skill, SkillLevel, Social,} from '../data';
+import {ContactInfo, Course, CvInfo, EducationInfo, EmptyCv, Language, Skill, SkillLevel, Social,} from '../data';
 import {
     getSocialLogo,
     getSocialPrefix,
@@ -45,11 +45,16 @@ type SkillSave = {
     logo?: string;
     level: SkillLevel;
 };
+type LangSave = {
+    name: string;
+    level: SkillLevel;
+};
 
 export type CvInfoSave = {
     name: string;
     birth: Date;
     about: string;
+    languages: LangSave[];
     contact: ContactSave[];
     eduMain: EducationSave[];
     eduExtra: EducationSave[];
@@ -69,12 +74,18 @@ function EncodeCv(info: CvInfo): CvInfoSave {
         name: info.name,
         about: info.about,
         birth: info.birth,
+        languages: info.languages.map((l) => {
+            return {
+                name: l.name,
+                level: l.level,
+            } as LangSave;
+        }),
         skills: info.skills.map((s) => {
             return {
                 name: s.name,
                 level: s.level,
                 logo: s.logo,
-            } as Skill;
+            } as SkillSave;
         }),
         contact: info.contact.map((c) => {
             return {
@@ -116,13 +127,23 @@ function DecodeCv(info: CvInfoSave): CvInfo {
     cv.about = info.about;
     cv.birth = new Date(info.birth);
 
-    cv.skills = info.skills.map((s) => {
-        return {
-            ...s,
-            id: crypto.randomUUID(),
-        } as Skill;
-    });
-
+    if (info.languages.length !== 0) {
+        console.log('decoding languages');
+        cv.languages = info.languages.map((l) => {
+            return {
+                ...l,
+                id: crypto.randomUUID(),
+            } as Language;
+        });
+    }
+    if (info.skills.length !== 0) {
+        cv.skills = info.skills.map((s) => {
+            return {
+                ...s,
+                id: crypto.randomUUID(),
+            } as Skill;
+        });
+    }
     if (info.contact.length !== 0) {
         cv.contact = info.contact.map((c) => {
             return {

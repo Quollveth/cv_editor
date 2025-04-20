@@ -12,7 +12,6 @@ export const SocialSchema = z.enum([
 
 const ContactSaveSchema = z.object({
     name: z.string().optional(),
-    url: z.string().optional(),
     which: SocialSchema.optional(),
 });
 
@@ -31,7 +30,13 @@ const SkillSaveSchema = z.object({
     name: z.string().optional(),
     logo: z.string().optional(),
     level: z
-        .enum(['Beginner', 'Intermediate', 'Advanced', 'Proficient'])
+        .enum(['Beginner', 'Intermediate', 'Advanced', 'Proficient', 'Expert'])
+        .optional(),
+});
+const LangSaveSchema = z.object({
+    name: z.string().optional(),
+    level: z
+        .enum(['Beginner', 'Intermediate', 'Advanced', 'Proficient', 'Expert'])
         .optional(),
 });
 
@@ -46,6 +51,7 @@ const CvInfoSaveSchema = z.object({
     eduMain: z.array(EducationSaveSchema).optional(),
     eduExtra: z.array(EducationSaveSchema).optional(),
     skills: z.array(SkillSaveSchema).optional(),
+    languages: z.array(LangSaveSchema).optional(),
 });
 
 export function ValidateCv(data: unknown): data is CvInfoSave {
