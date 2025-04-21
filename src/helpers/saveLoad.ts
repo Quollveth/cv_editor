@@ -9,7 +9,7 @@ import {
 } from '../components/logos/social';
 import { ValidateCv } from '../zod';
 
-const ToCourseDate = (date: Date, yearOnly: boolean): string => {
+export const ToCourseDate = (date: Date, yearOnly: boolean): string => {
     if (yearOnly) {
         return `${date.getFullYear()}`;
     } else {
@@ -128,7 +128,6 @@ function DecodeCv(info: CvInfoSave): CvInfo {
     cv.birth = new Date(info.birth);
 
     if (info.languages.length !== 0) {
-        console.log('decoding languages');
         cv.languages = info.languages.map((l) => {
             return {
                 ...l,

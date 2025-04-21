@@ -8,7 +8,7 @@ type EducationLocale = 'SCHOOL' | 'COURSE' | 'START' | 'END'|'YEARONLY';
 type ListsLocale = 'CONTACT' | 'LANGUAGES' | 'SKILLS' | 'EDUMAIN' | 'EDUEXTRA';
 type BasicLocale = 'NAME' | 'ABOUT' | 'KEYWORDS' | 'BIRTHDAY' | 'ADD';
 
-type EditorLocaleKeys =
+export type EditorLocaleKeys =
     | BasicLocale
     | EducationLocale
     | LanguagesLocale
