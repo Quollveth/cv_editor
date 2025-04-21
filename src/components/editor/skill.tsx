@@ -47,7 +47,7 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
             const updatedSvgString = new XMLSerializer().serializeToString(svg);
 
             logoRef.current.innerHTML = updatedSvgString;
-            editSkill({ logo: btoa(updatedSvgString) });
+            editSkill({ logo: updatedSvgString });
         } catch (error) {
             console.error('Failed to update logo SVG:', error);
             alert('Invalid SVG input. Please double-check the format.');
@@ -59,12 +59,7 @@ const SkillEditor = (props: ListRenderProps<Skill>) => {
             return;
         }
 
-        try {
-            const decoded = atob(props.initial.logo!);
-            changeLogo(decoded);
-        } catch (e) {
-            console.warn('Invalid base64 logo string:', e);
-        }
+        changeLogo(props.initial.logo);
     }, []);
 
     return (

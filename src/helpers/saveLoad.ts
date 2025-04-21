@@ -84,7 +84,7 @@ function EncodeCv(info: CvInfo): CvInfoSave {
             return {
                 name: s.name,
                 level: s.level,
-                logo: s.logo,
+                logo: s.logo ? btoa(s.logo) : '',
             } as SkillSave;
         }),
         contact: info.contact.map((c) => {
@@ -139,7 +139,9 @@ function DecodeCv(info: CvInfoSave): CvInfo {
     if (info.skills.length !== 0) {
         cv.skills = info.skills.map((s) => {
             return {
-                ...s,
+                name: s.name,
+                level: s.level,
+                logo: s.logo ? atob(s.logo) : '',
                 id: crypto.randomUUID(),
             } as Skill;
         });
