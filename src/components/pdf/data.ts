@@ -7,9 +7,8 @@ import { EditorLocale } from '../../locale';
 import { EditorLocaleKeys } from '../../locale/EditorLocale';
 
 export interface ContactPdf {
-    name: string;
     url: string;
-    logo: (props: any) => JSX.Element;
+    logo: (props: any) => JSX.Element; // always an svg
 }
 export interface CoursePdf {
     name: string;
@@ -91,39 +90,38 @@ const getLevelLocale = (
 
 export const CvToPdf = (cv: CvInfo, lang: Locale): CvInfoPdf => {
     return {
-        name: cv.name,
-        about: cv.about,
-        keywords: [...cv.keywords],
-        age: getAge(cv.birth),
-        eduMain: cv.eduMain.map((e) => {
+        name: cv.name || '',
+        about: cv.about || '',
+        keywords: [...(cv.keywords || [])],
+        age: cv.birth ? getAge(cv.birth) : 0,
+        eduMain: (cv.eduMain || []).map((e) => {
             return {
-                name: e.name,
-                what: e.what.map(courseMapper),
+                name: e?.name || '',
+                what: (e?.what || []).map(courseMapper),
             };
         }),
-        eduExtra: cv.eduExtra.map((e) => {
+        eduExtra: (cv.eduExtra || []).map((e) => {
             return {
-                name: e.name,
-                what: e.what.map(courseMapper),
+                name: e?.name || '',
+                what: (e?.what || []).map(courseMapper),
             };
         }),
-        contact: cv.contact.map((c) => {
+        contact: (cv.contact || []).map((c) => {
             return {
-                name: c.name,
-                url: getSocialUrl(c.which),
+                url: c?.which && c?.name ? getSocialUrl(c.which) + c.name : '',
                 logo: getSocialLogo(c.which),
             };
         }),
-        skills: cv.skills.map((s) => {
+        skills: (cv.skills || []).map((s) => {
             return {
-                name: s.name,
-                level: getLevelLocale(s.level, lang, true),
+                name: s?.name || '',
+                level: s?.level ? getLevelLocale(s.level, lang, true) : '',
             };
         }),
-        languages: cv.languages.map((l) => {
+        languages: (cv.languages || []).map((l) => {
             return {
-                name: l.name,
-                level: getLevelLocale(l.level, lang, false),
+                name: l?.name || '',
+                level: l?.level ? getLevelLocale(l.level, lang, false) : '',
             };
         }),
     };

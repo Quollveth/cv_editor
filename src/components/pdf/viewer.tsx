@@ -17,7 +17,7 @@ const Resume = ({ resume }: { resume: CvInfoPdf }) => (
     </Document>
 );
 
-const CvPdf = (resume: CvInfo) => {
+const CvPdf = ({ resume }: { resume: CvInfo }) => {
     const [settings] = useContext(SettingsContext);
 
     let pdfCv: CvInfoPdf;
