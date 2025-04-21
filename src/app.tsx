@@ -8,7 +8,7 @@ import Panel from './components/controlPanel';
 import Editor from './components/cvEditor';
 import { DefaultSettings, SettingsContext } from './settings';
 import { DocumentIcon } from './components/svg';
-import PdfViewer from './components/pdf/viewer';
+import CvPdf from './components/pdf/viewer';
 
 const LoadSettings = () => {
     const saved = localStorage.getItem('settings');
@@ -30,7 +30,7 @@ const App = () => {
     const [settings, setSettings] = useState(LoadSettings());
 
     // regular state
-    const [showPdf, setShowPdf] = useState(true);
+    const [showPdf, setShowPdf] = useState(false);
 
     return (
         <StrictMode>
@@ -47,8 +47,8 @@ const App = () => {
                         </div>
                         {showPdf && (
                             <div className="z-2 p-4 max-w-1/3 h-full aspect-[1/1.4142] fixed bottom-0 end-0 ">
-                                <div className="border-2 border-gray-500 rounded-lg shadow-lg h-full w-full">
-                                    <PdfViewer />
+                                <div className="h-full w-full">
+                                    <CvPdf key={CvData.id} />
                                 </div>
                             </div>
                         )}
