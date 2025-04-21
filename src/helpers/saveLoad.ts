@@ -54,6 +54,7 @@ export type CvInfoSave = {
     name: string;
     birth: Date;
     about: string;
+    keywords: string[];
     languages: LangSave[];
     contact: ContactSave[];
     eduMain: EducationSave[];
@@ -74,6 +75,7 @@ function EncodeCv(info: CvInfo): CvInfoSave {
         name: info.name,
         about: info.about,
         birth: info.birth,
+        keywords: [...info.keywords],
         languages: info.languages.map((l) => {
             return {
                 name: l.name,
@@ -126,6 +128,7 @@ function DecodeCv(info: CvInfoSave): CvInfo {
     cv.name = info.name;
     cv.about = info.about;
     cv.birth = new Date(info.birth);
+    cv.keywords = [...info.keywords];
 
     if (info.languages.length !== 0) {
         cv.languages = info.languages.map((l) => {

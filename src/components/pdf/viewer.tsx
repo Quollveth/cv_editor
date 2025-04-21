@@ -1,37 +1,40 @@
 import { PDFViewer } from '@react-pdf/renderer';
 
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page } from '@react-pdf/renderer';
+import { CvInfoPdf, CvToPdf } from './data';
+import ContactLink from './parts/contact';
+import { useContext } from 'react';
+import { SettingsContext } from '../../settings';
+import { CvInfo } from '../../data';
 
-// Create styles
-const styles = StyleSheet.create({
-    page: {
-        flexDirection: 'row',
-        backgroundColor: '#E4E4E4',
-    },
-    section: {
-        margin: 10,
-        padding: 10,
-        flexGrow: 1,
-    },
-});
-
-const MyDocument = () => (
+const Resume = ({ resume }: { resume: CvInfoPdf }) => (
     <Document>
-        <Page size="A4" style={styles.page}>
-            <View style={styles.section}>
-                <Text>Section #1</Text>
-            </View>
-            <View style={styles.section}>
-                <Text>Section #2</Text>
-            </View>
+        <Page>
+            {resume.contact.map((c, i) => (
+                <ContactLink key={i} contact={c} />
+            ))}
         </Page>
     </Document>
 );
 
-const CvPdf = () => {
+const CvPdf = (resume: CvInfo) => {
+    const [settings] = useContext(SettingsContext);
+
+    let pdfCv: CvInfoPdf;
+    try {
+        pdfCv = CvToPdf(resume, settings.language);
+    } catch (e) {
+        return (
+            <div className="w-full h-full flex items-center justify-center">
+                <p>Error loading PDF</p>
+                <p>{`${e}`}</p>
+            </div>
+        );
+    }
+
     return (
         <PDFViewer className="h-full w-full">
-            <MyDocument />
+            <Resume resume={pdfCv} />
         </PDFViewer>
     );
 };
