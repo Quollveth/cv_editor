@@ -1,4 +1,4 @@
-import { StrictMode, useState } from 'react';
+import { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import '@/assets/main.css';
@@ -32,6 +32,11 @@ const App = () => {
     // regular state
     const [showPdf, setShowPdf] = useState(false);
 
+    //HACK: pdf viewer breaks everything if the data changes while it is visible, so it gets memorized and remains static
+    const memoizedPdf = useMemo(() => {
+        return <CvPdf resume={CvData} />;
+    }, [showPdf]);
+
     return (
         <StrictMode>
             <SettingsContext.Provider value={[settings, setSettings]}>
@@ -48,7 +53,8 @@ const App = () => {
                         {showPdf && (
                             <div className="z-2 p-4 max-w-1/3 h-full aspect-[1/1.4142] fixed bottom-0 end-0 ">
                                 <div className="h-full w-full">
-                                    <CvPdf key={CvData.id} />
+                                    {/*TODO: Make pdf viewer not break everything when data changes*/}
+                                    {memoizedPdf}
                                 </div>
                             </div>
                         )}
