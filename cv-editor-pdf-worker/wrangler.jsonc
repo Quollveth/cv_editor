@@ -1,0 +1,10 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "cv-editor-pdf-worker",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-04-23",
+	"observability": {
+		"enabled": true
+	},
+	"vars": { "ORIGIN": "production_value" },
+}
