@@ -1,13 +1,12 @@
-import { StrictMode, useMemo, useState } from 'react';
+import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import '@/assets/main.css';
+import '../assets/main.css';
 
 import { CVContext, EmptyCv } from './data';
 import Panel from './components/controlPanel';
 import Editor from './components/cvEditor';
 import { DefaultSettings, SettingsContext } from './settings';
-import { DocumentIcon } from './components/svg';
 
 const LoadSettings = () => {
     const saved = localStorage.getItem('settings');
@@ -28,40 +27,22 @@ const App = () => {
     const [CvData, setCvData] = useState(EmptyCv());
     const [settings, setSettings] = useState(LoadSettings());
 
-    // regular state
-    const [showPdf, setShowPdf] = useState(false);
-
     return (
         <StrictMode>
             <SettingsContext.Provider value={[settings, setSettings]}>
                 <CVContext.Provider value={[CvData, setCvData]}>
                     <div
-                        className={`z-1 border-1 border-gray-500 m-2 shadow-lg rounded bg-white sticky ${showPdf ? 'max-w-2/3' : ''}`}
+                        className={
+                            'z-1 border-1 border-gray-500 m-2 shadow-lg rounded bg-white sticky'
+                        }
                     >
                         <Panel key={settings.id} />
                     </div>
                     <div className="w-full flex">
-                        <div className={`flex-1 ${showPdf ? 'max-w-2/3' : ''}`}>
+                        <div className={'flex-1'}>
                             <Editor key={CvData.id} />
                         </div>
-                        {showPdf && (
-                            <div className="z-2 p-4 max-w-1/3 h-full aspect-[1/1.4142] fixed bottom-0 end-0 ">
-                                <div className="h-full w-full">
-                                    {/*TODO: PDF goes here if it ever exists */}
-                                </div>
-                            </div>
-                        )}
                     </div>
-
-                    {/*
-                    <button
-                        onClick={() => setShowPdf(!showPdf)}
-                        className="z-3 fixed bottom-3 right-14 bg-blue-800 rounded-full p-4 text-white shadow-lg cursor-pointer hover:bg-blue-900"
-                    >
-                        <DocumentIcon />
-                    </button>
-
-					*/}
                 </CVContext.Provider>
             </SettingsContext.Provider>
         </StrictMode>

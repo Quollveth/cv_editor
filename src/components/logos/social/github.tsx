@@ -7,9 +7,6 @@ const GitHub = (props: SVGProps<SVGSVGElement>) => (
         x="0px"
         y="0px"
         viewBox="0 0 97.6 96"
-        style={{
-            enableBackground: 'new 0 0 97.6 96',
-        }}
         xmlSpace="preserve"
         width="1em"
         height="1em"
